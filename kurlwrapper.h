@@ -2,7 +2,8 @@
 #define KURLWRAPPER_H
 
 #include <QDeclarativeItem>
-#include <QString>
+#include "pathmodel.h"
+#include "util.h"
 #include <QDir>
 #include <KUrl>
 
@@ -15,7 +16,6 @@ class KUrlWrapper : public QDeclarativeItem
     Q_PROPERTY(QString host READ host NOTIFY urlChanged)
     Q_PROPERTY(int port READ port NOTIFY urlChanged)
     Q_PROPERTY(QString protocol READ protocol NOTIFY urlChanged)
-    Q_PROPERTY(QStringList pathModel READ pathModel NOTIFY urlModelChanged)
     Q_PROPERTY(QChar seperator READ separator)
 
 public:
@@ -34,24 +34,30 @@ public:
     QString protocol() { return m_url.protocol(); }
 
     // URL list model (QStringList). Splits the url by derectory seperator.
-    QStringList pathModel() { return m_pathStringList; }
+    Q_INVOKABLE PathModel* pathModel() { return m_pathModel; }
+    Q_INVOKABLE int rowCount() { return m_pathModel->rowCount(); }
 
     // Convenient function that returns the separator.
     QChar separator() { return m_separator; }
 
+    // This function gets called from QML. It will update the m_pathStringList
+    // to the index passed to this function. It basically reconstructs the URL till this index and calls setUrl.
+    Q_INVOKABLE void updateUrlBasedOnIndex(int index);
+
 private:
-    void updateUrlModel();
+    void updatePathModel();
     
 signals:
     void urlChanged();
-    void urlModelChanged();
+    void pathModelChanged();
     
 public slots:
     
 private:
     KUrl m_url;
     QChar m_separator;
-    QStringList m_pathStringList;
+    Util* m_util;
+    PathModel* m_pathModel;
 };
 
 #endif // KURLWRAPPER_H

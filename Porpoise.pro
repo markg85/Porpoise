@@ -31,7 +31,9 @@ symbian:TARGET.CAPABILITY += NetworkServices
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    kurlwrapper.cpp
+    kurlwrapper.cpp \
+    pathmodel.cpp \
+    util.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -41,4 +43,6 @@ LIBS += -lkdecore -lkio
 INCLUDEPATH += /usr/include/KDE
 
 HEADERS += \
-    kurlwrapper.h
+    kurlwrapper.h \
+    pathmodel.h \
+    util.h

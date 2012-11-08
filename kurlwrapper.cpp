@@ -6,7 +6,8 @@ KUrlWrapper::KUrlWrapper(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
     , m_url()
     , m_separator(QDir::separator())
-    , m_pathStringList()
+    , m_util(Util::instance())
+    , m_pathModel(m_util->pathModel())
 {
 }
 
@@ -17,19 +18,36 @@ QString KUrlWrapper::url()
 
 void KUrlWrapper::setUrl(const QString &url)
 {
-    // Update the url with the newly given one
-    m_url = KUriFilter::self()->filteredUri(url);
-    m_url.cleanPath();
-    emit urlChanged();
+    KUrl newUrl(KUriFilter::self()->filteredUri(url));
 
-    // New url is set, update the model as well.
-    updateUrlModel();
+    // Update the url with the newly given one
+    if(m_url != newUrl)
+    {
+        m_url = newUrl;
+        m_url.cleanPath();
+        emit urlChanged();
+
+        // New url is set, update the model as well.
+        updatePathModel();
+        qDebug() << "(C++) New URL has been set";
+    }
 
     qDebug() << "(C++) URL:" << m_url;
+
 }
 
-void KUrlWrapper::updateUrlModel()
+void KUrlWrapper::updateUrlBasedOnIndex(int index)
 {
-    m_pathStringList = path().split(separator(), QString::SkipEmptyParts);
-    emit urlModelChanged();
+    int rowsToRemove = -1 + m_pathModel->rowCount() - index;
+    m_pathModel->removeRows(index + 1, rowsToRemove);
+}
+
+void KUrlWrapper::updatePathModel()
+{
+//    m_pathModel = path().split(separator(), QString::SkipEmptyParts);
+    m_pathModel->setStringList(path().split(separator(), QString::SkipEmptyParts));
+
+//    qDebug() << m_pathModel->stringList();
+
+    emit pathModelChanged();
 }

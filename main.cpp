@@ -1,7 +1,10 @@
 #include <QApplication>
+#include <QDeclarativeContext>
 #include "qmlapplicationviewer.h"
 
+#include "pathmodel.h"
 #include "kurlwrapper.h"
+#include "util.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -9,6 +12,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    viewer.rootContext()->setContextProperty("Util", Util::instance());
+    viewer.rootContext()->setContextProperty("GlobalPathModel", Util::instance()->pathModel());
 
     qmlRegisterType<KUrlWrapper>("Porpoise", 0, 1, "KUrlWrapper");
 
