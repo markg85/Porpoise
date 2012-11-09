@@ -60,9 +60,17 @@ Item {
                     onClicked: {
                         bcButton.lastItem = true
                         bcButton.parent.parent.breadcrumbButtonPressed(index)
+                        console.log("BreadcrumbButton Clicked")
                     }
                 }
             }
+        }
+
+        BreadcrumbDropdown {
+            anchors.right: textRect.right
+            height: arrawRectHeightAndWidth
+            width: arrawRectHeightAndWidth
+            visible: !lastItem
         }
     }
 }
