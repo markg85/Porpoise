@@ -36,6 +36,12 @@ void KUrlWrapper::setUrl(const QString &url)
 
 }
 
+void KUrlWrapper::append(QString entry)
+{
+    m_pathModel->setData(m_pathModel->index(rowCount()- 1), entry);
+    updateUrlPath();
+}
+
 void KUrlWrapper::updateUrlBasedOnIndex(int index)
 {
     if(index == (m_pathModel->rowCount() - 1))
@@ -45,7 +51,7 @@ void KUrlWrapper::updateUrlBasedOnIndex(int index)
 
     int rowsToRemove = -1 + m_pathModel->rowCount() - index;
     m_pathModel->removeRows(index + 1, rowsToRemove);
-    m_url.setPath(m_pathModel->stringList().join(QString(separator())));
+    updateUrlPath();
 }
 
 void KUrlWrapper::updatePathModel()
@@ -55,5 +61,10 @@ void KUrlWrapper::updatePathModel()
 
 //    qDebug() << m_pathModel->stringList();
 
-    emit pathModelChanged();
+    //    emit pathModelChanged();
+}
+
+void KUrlWrapper::updateUrlPath()
+{
+    m_url.setPath(m_pathModel->stringList().join(QString(separator())));
 }

@@ -34,13 +34,26 @@ Item {
         pathModelCleanupTimer.start()
     }
 
+    function breadcrumbButtonAddAfterIndex(index, entryName) {
+
+//        breadcrumbButtonPressed(index)
+        urlWrapper.updateUrlBasedOnIndex(index + 1)
+        urlWrapper.append(entryName)
+    }
+
     Row {
         id: repeaterElement
 
         Repeater {
+            id: bcRepeater
             model: GlobalPathModel
             delegate: BreadcrumbButton {lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
         }
+    }
+
+    Component.onCompleted: {
+        console.log("1: GlobalPathModel " + GlobalPathModel)
+        console.log("2: Util " + Util.pathModel())
     }
 }
 

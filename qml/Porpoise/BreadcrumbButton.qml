@@ -17,10 +17,17 @@ Item {
     property int additionalTextMargin: 5 // left and right
     property int arrawRectHeightAndWidth: height // The height is also the width
     property int textRectWidth: 0
+    property bool externalLastItemChanged: false
 
     Component.onCompleted: {
         // Doing this "binding" (assigning) in here so that the value isn't bound to buttonText.width.
         textRectWidth = buttonText.width + (additionalTextMargin * 2)
+    }
+
+    onExternalLastItemChangedChanged: {
+        if(externalLastItemChanged) {
+            textRectWidth = buttonText.width + (additionalTextMargin * 2)
+        }
     }
 
     function removeElement(iAnimationTime, iPrePauseTime) {
@@ -60,6 +67,10 @@ Item {
                     onClicked: {
                         bcButton.lastItem = true
                         bcButton.parent.parent.breadcrumbButtonPressed(index)
+                        if(bcBar.currentPopup) {
+                            bcBar.currentPopup.closePopup()
+                        }
+
                         console.log("BreadcrumbButton Clicked")
                     }
                 }
@@ -67,6 +78,16 @@ Item {
         }
 
         BreadcrumbDropdown {
+            onEntryClicked: {
+                bcButton.parent.parent.breadcrumbButtonAddAfterIndex(index, entryName)
+
+                var obj = bcRepeater.itemAt(index + 1)
+                if(obj) {
+                    obj.lastItem = true
+                    obj.externalLastItemChanged = true
+                }
+            }
+
             anchors.right: textRect.right
             height: arrawRectHeightAndWidth
             width: arrawRectHeightAndWidth

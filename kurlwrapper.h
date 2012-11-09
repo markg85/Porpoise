@@ -36,6 +36,7 @@ public:
     // URL list model (QStringList). Splits the url by derectory seperator.
     Q_INVOKABLE PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE int rowCount() { return m_pathModel->rowCount(); }
+    Q_INVOKABLE void append(QString entry);
 
     // Convenient function that returns the separator.
     QChar separator() { return m_separator; }
@@ -46,6 +47,7 @@ public:
 
 private:
     void updatePathModel();
+    void updateUrlPath();
     
 signals:
     void urlChanged();

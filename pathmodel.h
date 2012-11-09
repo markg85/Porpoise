@@ -5,6 +5,7 @@
 
 class PathModel : public QStringListModel
 {
+    Q_OBJECT
 public:
     explicit PathModel(QObject *parent = 0);
 };

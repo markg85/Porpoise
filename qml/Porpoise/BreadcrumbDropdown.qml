@@ -6,6 +6,7 @@ Item {
     id: bcDropdown
 
     signal closePopup()
+    signal entryClicked(string entryName)
 
     onClosePopup: {
         arrowImage.state = "normal"
@@ -84,6 +85,14 @@ Item {
         width: 200
         height: 0
         color: "red"
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                bcDropdown.entryClicked("some_test_text_to_test_if_this_works")
+                console.log(".... --> index: " + index)
+            }
+        }
 
         states: [
             State {
