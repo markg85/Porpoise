@@ -78,7 +78,7 @@ Item {
         id: popup
         opacity: 0.0
         anchors {
-            right: bcDropdown.right
+            left: bcDropdown.left
             top: bcDropdown.bottom
         }
         width: 200
