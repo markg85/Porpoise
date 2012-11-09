@@ -38,8 +38,14 @@ void KUrlWrapper::setUrl(const QString &url)
 
 void KUrlWrapper::updateUrlBasedOnIndex(int index)
 {
+    if(index == (m_pathModel->rowCount() - 1))
+    {
+        return;
+    }
+
     int rowsToRemove = -1 + m_pathModel->rowCount() - index;
     m_pathModel->removeRows(index + 1, rowsToRemove);
+    m_url.setPath(m_pathModel->stringList().join(QString(separator())));
 }
 
 void KUrlWrapper::updatePathModel()
