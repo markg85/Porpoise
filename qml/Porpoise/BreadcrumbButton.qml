@@ -2,8 +2,9 @@ import QtQuick 1.1
 
 Item {
     id: bcButton
-    width: 100
-    height: 30
+    width: textRectWidth + ((lastItem) ? 0 : arrawRectHeightAndWidth)
+    height: bcBar.height
+
     transformOrigin: Item.Left
 
     property string test: modelData
@@ -12,7 +13,15 @@ Item {
     property int pauseTime: 0
     property bool lastItem: false
 
-    signal bottonPressed(int modelIndex)
+    // Used for calculationg the width of this button. This included the ">" arrow.
+    property int additionalTextMargin: 5 // left and right
+    property int arrawRectHeightAndWidth: height // The height is also the width
+    property int textRectWidth: 0
+
+    Component.onCompleted: {
+        // Doing this "binding" (assigning) in here so that the value isn't bound to buttonText.width.
+        textRectWidth = buttonText.width + (additionalTextMargin * 2)
+    }
 
     function removeElement(iAnimationTime, iPrePauseTime) {
         bcButton.animationTime = iAnimationTime
@@ -31,16 +40,28 @@ Item {
         }
     }
 
-    Text {
-        anchors.centerIn: parent
-        text: index + " - " + modelData
-        font.bold: bcButton.lastItem
+    Rectangle {
+        id: textRect
+        width: textRectWidth + ((lastItem) ? 0 : arrawRectHeightAndWidth)
+        height: bcButton.height
+        color: "orange"
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                bcButton.lastItem = true
-                bcButton.parent.parent.breadcrumbButtonPressed(index)
+        Item {
+            width: textRectWidth
+            height: parent.height
+            Text {
+                id: buttonText
+                anchors.centerIn: parent
+                text: index + " - " + modelData
+                font.bold: bcButton.lastItem
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        bcButton.lastItem = true
+                        bcButton.parent.parent.breadcrumbButtonPressed(index)
+                    }
+                }
             }
         }
     }

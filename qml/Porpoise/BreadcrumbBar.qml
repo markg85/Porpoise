@@ -2,6 +2,8 @@ import QtQuick 1.1
 
 Item {
 
+    id: bcBar
+
     property variant urlWrapper: 0
 
     // This timer fires to update the url path model _after_ the animations have been run.
@@ -33,7 +35,6 @@ Item {
 
     Row {
         id: repeaterElement
-
 
         Repeater {
             model: GlobalPathModel

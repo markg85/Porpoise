@@ -14,6 +14,7 @@ Rectangle {
 
     BreadcrumbBar {
         urlWrapper: urlWrapper
+        height: 30
     }
 
     Rectangle {
