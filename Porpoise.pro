@@ -4,7 +4,7 @@ folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
 # Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH =
+QML_IMPORT_PATH = /usr/lib/kde4/imports
 
 symbian:TARGET.UID3 = 0xE6C1FAF8
 
@@ -33,16 +33,18 @@ symbian:TARGET.CAPABILITY += NetworkServices
 SOURCES += main.cpp \
     kurlwrapper.cpp \
     pathmodel.cpp \
-    util.cpp
+    util.cpp \
+    kcompletionwrapper.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
-LIBS += -lkdecore -lkio
+LIBS += -lkdecore -lkio -lkdeui
 INCLUDEPATH += /usr/include/KDE
 
 HEADERS += \
     kurlwrapper.h \
     pathmodel.h \
-    util.h
+    util.h \
+    kcompletionwrapper.h

@@ -40,6 +40,7 @@ public:
 
     Q_INVOKABLE PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE QString testString() { return m_test; }
+    Q_INVOKABLE QString testSearchString();
 
 
 

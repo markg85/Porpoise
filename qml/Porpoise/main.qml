@@ -9,12 +9,13 @@ Rectangle {
     // To prevent duplication it's created in the main file and passed to the elements that need is.
     KUrlWrapper {
         id: urlWrapper
-        url: "~/aaa/bbb/ccc/ddd/eee/fff/ggg/hhh/iii/jjj/kkk"
+        url: "~/aaa/bbb/ccc/ddd/eee/fff/"
     }
 
     BreadcrumbBar {
         urlWrapper: urlWrapper
         height: 30
+        width: parent.width
     }
 
     Rectangle {
@@ -29,6 +30,22 @@ Rectangle {
             onClicked: {
                 urlWrapper.url = "~"
             }
+        }
+    }
+
+    TextInput {
+        x: 100
+        y: 150
+        color: "orange"
+        width: 100
+        height: 20
+
+        Keys.onPressed: {
+            console.log("pressed...")
+        }
+
+        Keys.onLeftPressed: {
+            console.log("LEFT PRESSED")
         }
     }
 }

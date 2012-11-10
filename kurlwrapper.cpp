@@ -13,7 +13,7 @@ KUrlWrapper::KUrlWrapper(QDeclarativeItem *parent)
 
 QString KUrlWrapper::url()
 {
-    return m_url.path();
+    return m_url.url();
 }
 
 void KUrlWrapper::setUrl(const QString &url)

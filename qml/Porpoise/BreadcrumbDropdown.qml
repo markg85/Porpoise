@@ -53,7 +53,6 @@ Item {
 
         MouseArea {
             anchors.fill: parent
-            hoverEnabled: true
             onEntered: {
 //                parent.color = "purple"
             }
@@ -89,8 +88,8 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: {
+                // This is obviously stub. The text of the elemant that is "selected" should be send to entryClicked.
                 bcDropdown.entryClicked("some_test_text_to_test_if_this_works")
-                console.log(".... --> index: " + index)
             }
         }
 

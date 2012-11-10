@@ -4,6 +4,7 @@
 
 #include "pathmodel.h"
 #include "kurlwrapper.h"
+#include "kcompletionwrapper.h"
 #include "util.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
@@ -16,6 +17,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("GlobalPathModel", Util::instance()->pathModel());
 
     qmlRegisterType<KUrlWrapper>("Porpoise", 0, 1, "KUrlWrapper");
+    qmlRegisterType<KCompletionWrapper>("Porpoise", 0, 1, "KCompletionWrapper");
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();
