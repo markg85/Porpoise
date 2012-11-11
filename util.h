@@ -10,6 +10,7 @@
 class Util : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QObject* pathModel READ pathModel CONSTANT)
 public:
     static Util* instance()
     {
@@ -38,7 +39,7 @@ public:
         mutex.unlock();
     }
 
-    Q_INVOKABLE PathModel* pathModel() { return m_pathModel; }
+    PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE QString testString() { return m_test; }
     Q_INVOKABLE QString testSearchString();
 

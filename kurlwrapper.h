@@ -17,6 +17,7 @@ class KUrlWrapper : public QDeclarativeItem
     Q_PROPERTY(int port READ port NOTIFY urlChanged)
     Q_PROPERTY(QString protocol READ protocol NOTIFY urlChanged)
     Q_PROPERTY(QChar seperator READ separator)
+    Q_PROPERTY(QObject* pathModel READ pathModel CONSTANT)
 
 public:
     explicit KUrlWrapper(QDeclarativeItem *parent = 0);
@@ -34,7 +35,7 @@ public:
     QString protocol() { return m_url.protocol(); }
 
     // URL list model (QStringList). Splits the url by derectory seperator.
-    Q_INVOKABLE PathModel* pathModel() { return m_pathModel; }
+    PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE int rowCount() { return m_pathModel->rowCount(); }
     Q_INVOKABLE void append(QString entry);
 

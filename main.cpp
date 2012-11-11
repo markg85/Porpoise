@@ -14,7 +14,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.rootContext()->setContextProperty("Util", Util::instance());
-    viewer.rootContext()->setContextProperty("GlobalPathModel", Util::instance()->pathModel());
 
     qmlRegisterType<KUrlWrapper>("Porpoise", 0, 1, "KUrlWrapper");
     qmlRegisterType<KCompletionWrapper>("Porpoise", 0, 1, "KCompletionWrapper");

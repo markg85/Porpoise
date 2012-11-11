@@ -26,11 +26,5 @@ Item {
         anchors.fill: parent
         id: crumbContentLoader
     }
-
-    Component.onCompleted: {
-        console.log("1: GlobalPathModel " + GlobalPathModel)
-        console.log("2: Util " + Util.pathModel())
-        console.log("3: Search test: " + Util.testSearchString())
-    }
 }
 

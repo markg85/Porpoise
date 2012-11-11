@@ -55,7 +55,7 @@ Rectangle {
 
         Repeater {
             id: bcRepeater
-            model: GlobalPathModel
+            model: urlWrapper.pathModel
             delegate: BreadcrumbButton {lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
         }
     }
