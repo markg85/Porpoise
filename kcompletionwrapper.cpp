@@ -29,6 +29,12 @@ void KCompletionWrapper::setUrl(const QString &url)
 
     qDebug() << "(C++) Search String:" << m_searchString;
 
+    if(m_url.length() >= 2 && m_url.endsWith("//"))
+    {
+        // The user is typing slashes. We only call KIO on the first slash entered. If the user types multiple then just ignore.
+        return;
+    }
+
     if(m_urlTillLastSlash != urlTillLastSlash || m_url.endsWith('/'))
     {
         m_urlTillLastSlash = urlTillLastSlash;

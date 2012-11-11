@@ -79,6 +79,7 @@ Item {
             console.log("(JS) TextChanged to: " + text)
             console.log("(JS) URL send to KCompletionWrapper: " + text)
             completionWrapper.setUrl(text)
+            setCompleterPosition()
         }
 
         function attemptCompletion() {
@@ -103,6 +104,8 @@ Item {
                 completerText.text = currentValue.substring(searchString.length)
             }
 
+            console.log("(JS) -> searchString: " + searchString)
+
             fromLeftArrow = false
 
             setCompleterPosition()
@@ -114,7 +117,6 @@ Item {
             console.log("(JS) setCompleterPosition")
             var rect = positionToRectangle(cursorPosition);
             completerText.x = rect.x + 6
-            console.log("(JS) -> searchString: " + searchString)
             console.log("(JS) -> currentValue: " + currentValue)
         }
 
