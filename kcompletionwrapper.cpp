@@ -23,9 +23,6 @@ void KCompletionWrapper::setUrl(const QString &url)
     qDebug() << "(C++) setUrl()";
     m_url = url;
 
-    // Regardless if KIO is running, reset it's pointer.
-    m_job = 0;
-
     int lastSlashPosition = m_url.lastIndexOf('/');
     QString urlTillLastSlash = m_url.left(lastSlashPosition + 1);
     m_searchString = m_url.right(-1 + m_url.length() - lastSlashPosition);
@@ -116,6 +113,9 @@ QString KCompletionWrapper::nextMatch()
 
 void KCompletionWrapper::attemptFetchNewCompletionStrings()
 {
+    // Regardless if KIO is still running from a previous listjob, reset it's pointer.
+    m_job = 0;
+
     m_job = KIO::listDir(KUrl(m_urlTillLastSlash));
     m_job->addMetaData("details", "0");
     qDebug() << "(C++) URL send to KIO:" << m_urlTillLastSlash;
