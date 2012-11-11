@@ -11,6 +11,7 @@ Item {
         anchors.fill: parent
         property string currentValue: ""
         property string lastValue: ""
+        property bool fromLeftArrow: false
         clearButtonShown: true
         focus: true
         text: {
@@ -51,9 +52,8 @@ Item {
 
             if(currentValue !== "") {
                 console.log("Keys.onTabPressed 2: " + currentValue)
-                select(text.lastIndexOf("/") + 1, text.length)
-                cut()
-                text += currentValue + "/"
+                text += completerText.text + "/"
+                completerText.text = ""
                 currentValue = ""
             }
 
@@ -61,6 +61,7 @@ Item {
 
         Keys.onLeftPressed: {
             text = text.slice(0, -1)
+            fromLeftArrow = true
         }
 
         Keys.onRightPressed: {
@@ -70,7 +71,9 @@ Item {
         }
 
         onTextChanged: {
-            console.log("(JS) TextChanged")
+
+            console.log("(JS) TextChanged to: " + text)
+            console.log("(JS) URL send to KCompletionWrapper: " + text)
             completionWrapper.setUrl(text)
 
             var searchString = text.substring(text.lastIndexOf("/") + 1)
@@ -94,8 +97,18 @@ Item {
             console.log("(JS) -> TEXT: " + text)
             console.log("(JS) -> lastValue: " + lastValue)
 
-            currentValue = completionWrapper.nextMatch()
-            completerText.text = currentValue.substring(searchString.length)
+            // If we move left (char by char) we eventually hit the "/". Once that happens we use the last known value as completion text.
+            if(fromLeftArrow && searchString == "") {
+                console.log("(JS) -> fromLeftArrow true. Setting lastValue as completer text: " + lastValue)
+                completerText.text = lastValue
+
+            } else {
+                currentValue = completionWrapper.nextMatch()
+                console.log("(JS) -> fromLeftArrow false. Setting completer text from nextMatch: " + currentValue)
+                completerText.text = currentValue.substring(searchString.length)
+            }
+
+            fromLeftArrow = false
 
             var rect = positionToRectangle(cursorPosition);
             completerText.x = rect.x + 6

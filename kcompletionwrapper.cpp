@@ -23,6 +23,9 @@ void KCompletionWrapper::setUrl(const QString &url)
     qDebug() << "(C++) setUrl()";
     m_url = url;
 
+    // Regardless if KIO is running, reset it's pointer.
+    m_job = 0;
+
     int lastSlashPosition = m_url.lastIndexOf('/');
     QString urlTillLastSlash = m_url.left(lastSlashPosition + 1);
     m_searchString = m_url.right(-1 + m_url.length() - lastSlashPosition);
@@ -113,11 +116,13 @@ QString KCompletionWrapper::nextMatch()
 
 void KCompletionWrapper::attemptFetchNewCompletionStrings()
 {
-    qDebug() << "(C++) attemptFetchNewCompletionStrings()";
-
     m_job = KIO::listDir(KUrl(m_urlTillLastSlash));
     m_job->addMetaData("details", "0");
     qDebug() << "(C++) URL send to KIO:" << m_urlTillLastSlash;
+    qDebug() << "(C++) cleared entry lists";
+    m_entryList->clear();
+    m_hiddenEntryList->clear();
+
     m_job->connect(m_job, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)), this, SLOT(storeFolderEntries(KIO::Job*, KIO::UDSEntryList)));
 }
 
@@ -127,8 +132,6 @@ void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryLi
 
     qDebug() << "(C++) storeFolderEntries()";
 
-    m_entryList->clear();
-    m_hiddenEntryList->clear();
     foreach(const KIO::UDSEntry& entry, list)
     {
         if(entry.isDir() && (entry.stringValue(KIO::UDSEntry::UDS_NAME) != "." && entry.stringValue(KIO::UDSEntry::UDS_NAME) != ".."))
@@ -153,7 +156,6 @@ void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryLi
         emit resultsChanged();
 
     }
-    m_job->deleteLater();
 }
 
 void KCompletionWrapper::storeMatches(QString)
