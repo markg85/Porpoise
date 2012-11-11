@@ -122,6 +122,8 @@ void KCompletionWrapper::attemptFetchNewCompletionStrings()
     qDebug() << "(C++) cleared entry lists";
     m_entryList->clear();
     m_hiddenEntryList->clear();
+    m_matches.clear();
+    emit resultsChanged();
 
     m_job->connect(m_job, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)), this, SLOT(storeFolderEntries(KIO::Job*, KIO::UDSEntryList)));
 }

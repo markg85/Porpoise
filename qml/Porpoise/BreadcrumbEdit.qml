@@ -76,20 +76,14 @@ Item {
             console.log("(JS) URL send to KCompletionWrapper: " + text)
             completionWrapper.setUrl(text)
 
-            var searchString = text.substring(text.lastIndexOf("/") + 1)
-
-            if(searchString == "" && text != "") {
-                var rect = positionToRectangle(cursorPosition);
-                completerText.x = rect.x + 6
-                completerText.text = lastValue
-            }
-
-            if(text == "") {
-                completerText.text = ""
-            }
+            attemptCompletion()
         }
 
         function attemptCompletion() {
+            if(text == "") {
+                completerText.text = ""
+                return;
+            }
             var searchString = text.substring(text.lastIndexOf("/") + 1)
 
             lastValue = currentValue;
@@ -121,6 +115,10 @@ Item {
             id: completerText
             anchors.verticalCenter: parent.verticalCenter
             opacity: 0.25
+
+            onTextChanged: {
+                console.log("(JS) completerText: " + text)
+            }
         }
 
         KCompletionWrapper {
