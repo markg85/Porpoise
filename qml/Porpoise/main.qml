@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import Porpoise 0.1
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Rectangle {
     width: 800
@@ -33,6 +34,7 @@ Rectangle {
         }
     }
 
+    //TextInput {
     TextInput {
         x: 100
         y: 150
@@ -44,8 +46,5 @@ Rectangle {
             console.log("pressed...")
         }
 
-        Keys.onLeftPressed: {
-            console.log("LEFT PRESSED")
-        }
     }
 }

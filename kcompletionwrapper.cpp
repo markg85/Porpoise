@@ -41,8 +41,6 @@ void KCompletionWrapper::setUrl(const QString &url)
     }
 
     m_completion.makeCompletion(m_searchString);
-
-    m_internalListIndex = -1;
 }
 
 // Returns an entry from bottom to top till m_internalListIndex = 0. Then resets itself to the last entry again.
@@ -115,6 +113,7 @@ void KCompletionWrapper::attemptFetchNewCompletionStrings()
 {
     // Regardless if KIO is still running from a previous listjob, reset it's pointer.
     m_job = 0;
+    m_internalListIndex = -1;
 
     m_job = KIO::listDir(KUrl(m_urlTillLastSlash));
     m_job->addMetaData("details", "0");
@@ -122,16 +121,20 @@ void KCompletionWrapper::attemptFetchNewCompletionStrings()
     qDebug() << "(C++) cleared entry lists";
     m_entryList->clear();
     m_hiddenEntryList->clear();
-    m_matches.clear();
-    emit resultsChanged();
+    m_completion.clear();
+
+    if(m_matches.count() > 0)
+    {
+        qDebug() << "(C++) cleared m_matches";
+        m_matches.clear();
+        emit resultsChanged();
+    }
 
     m_job->connect(m_job, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)), this, SLOT(storeFolderEntries(KIO::Job*, KIO::UDSEntryList)));
 }
 
 void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryList &list)
 {
-    Q_UNUSED(job);
-
     qDebug() << "(C++) storeFolderEntries()";
 
     foreach(const KIO::UDSEntry& entry, list)
@@ -156,7 +159,6 @@ void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryLi
     {
         m_matches = *m_entryList;
         emit resultsChanged();
-
     }
 }
 

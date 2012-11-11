@@ -38,16 +38,21 @@ Item {
         }
 
         Keys.onUpPressed: {
+            var searchString = text.substring(text.lastIndexOf("/") + 1)
             currentValue = completionWrapper.previousMatch()
+            completerText.text = currentValue.substring(searchString.length)
+            setCompleterPosition()
             console.log(currentValue)
         }
         Keys.onDownPressed: {
+            var searchString = text.substring(text.lastIndexOf("/") + 1)
             currentValue = completionWrapper.nextMatch()
+            completerText.text = currentValue.substring(searchString.length)
+            setCompleterPosition()
             console.log(currentValue)
         }
         Keys.onTabPressed: {
 
-    //        currentValue = completionWrapper.nextMatch()
             console.log("Keys.onTabPressed: " + currentValue)
 
             if(currentValue !== "") {
@@ -59,15 +64,14 @@ Item {
 
         }
 
-        Keys.onLeftPressed: {
-            text = text.slice(0, -1)
-            fromLeftArrow = true
+        Keys.onRightPressed: {
+            text += completerText.text.charAt(0)
         }
 
-        Keys.onRightPressed: {
-            var searchString = text.substring(text.lastIndexOf("/") + 1)
-            text += currentValue.charAt(searchString.length)
-            attemptCompletion()
+        Keys.onPressed: {
+            if(event.key === Qt.Key_Left || event.key === Qt.Key_Backspace) {
+                fromLeftArrow = true
+            }
         }
 
         onTextChanged: {
@@ -75,8 +79,6 @@ Item {
             console.log("(JS) TextChanged to: " + text)
             console.log("(JS) URL send to KCompletionWrapper: " + text)
             completionWrapper.setUrl(text)
-
-            attemptCompletion()
         }
 
         function attemptCompletion() {
@@ -84,9 +86,9 @@ Item {
                 completerText.text = ""
                 return;
             }
+
             var searchString = text.substring(text.lastIndexOf("/") + 1)
 
-            lastValue = currentValue;
             console.log("(JS) attemptCompletion")
             console.log("(JS) -> TEXT: " + text)
             console.log("(JS) -> lastValue: " + lastValue)
@@ -97,18 +99,23 @@ Item {
                 completerText.text = lastValue
 
             } else {
-                currentValue = completionWrapper.nextMatch()
                 console.log("(JS) -> fromLeftArrow false. Setting completer text from nextMatch: " + currentValue)
                 completerText.text = currentValue.substring(searchString.length)
             }
 
             fromLeftArrow = false
 
+            setCompleterPosition()
+
+            lastValue = currentValue;
+        }
+
+        function setCompleterPosition() {
+            console.log("(JS) setCompleterPosition")
             var rect = positionToRectangle(cursorPosition);
             completerText.x = rect.x + 6
             console.log("(JS) -> searchString: " + searchString)
             console.log("(JS) -> currentValue: " + currentValue)
-
         }
 
         Text {
@@ -126,7 +133,13 @@ Item {
 
             onResultsChanged: {
                 console.log("results changed!! >> " + results)
-                bcEdit.attemptCompletion()
+                if(results.length > 0) {
+                    bcEdit.currentValue = nextMatch()
+                    bcEdit.attemptCompletion()
+                } else {
+                    bcEdit.currentValue = ""
+                    completerText.text = bcEdit.currentValue
+                }
             }
         }
     }
