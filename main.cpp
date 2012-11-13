@@ -6,6 +6,7 @@
 #include "kurlwrapper.h"
 #include "kcompletionwrapper.h"
 #include "util.h"
+#include "testclass.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -20,6 +21,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();
+
+//    TestClass test;
+//    test.fetchHomefolder();
+//    test.fetchHomefolder();
+//    test.fetchHomefolder();
 
     return app->exec();
 }

@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import Porpoise 0.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 Item {
     id: bcEditRoot
@@ -22,9 +22,7 @@ Item {
             return bcBar.urlWrapper.url
         }
 
-        Keys.onReleased:
-        {
-
+        Keys.onReleased: {
             if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
             {
                 bcBar.urlWrapper.url = text
@@ -146,11 +144,15 @@ Item {
         }
     }
 
-    Column {
+    PlasmaExtras.ScrollArea {
         anchors.top: bcEdit.bottom
-        Repeater {
+        width: parent.width
+        height: 100
+        ListView {
+            anchors.fill: parent
             model: completionWrapper.results
-            Text {
+
+            delegate: Text {
                 text: modelData
             }
         }

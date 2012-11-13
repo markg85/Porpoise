@@ -47,4 +47,25 @@ Rectangle {
         }
 
     }
+
+    KCompletionWrapper {
+        id: testCompletion
+        property string url: "/home/mark"
+
+        onUrlChanged: {
+            console.log("(JS) URL: " + url)
+            testCompletion.setUrl(url)
+        }
+
+        Timer {
+            id: addChar
+            interval: 1000
+            onTriggered: parent.url += "/"
+        }
+
+        Component.onCompleted: {
+            testCompletion.setUrl(url)
+            addChar.start()
+        }
+    }
 }

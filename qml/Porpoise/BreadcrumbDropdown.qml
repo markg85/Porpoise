@@ -1,5 +1,6 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
+import Porpoise 0.1
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 Item {
 
@@ -85,13 +86,25 @@ Item {
         height: 0
         color: "red"
 
-        MouseArea {
+        PlasmaExtras.ScrollArea {
             anchors.fill: parent
-            onClicked: {
-                // This is obviously stub. The text of the elemant that is "selected" should be send to entryClicked.
-                bcDropdown.entryClicked("some_test_text_to_test_if_this_works")
+            ListView {
+                model: completionForDirList.results
+
+                delegate: Text {
+                    text: modelData
+                }
             }
         }
+
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: {
+//                // This is obviously stub. The text of the elemant that is "selected" should be send to entryClicked.
+//                //bcDropdown.entryClicked("some_test_text_to_test_if_this_works")
+//                console.log("Current URL till index: " + urlWrapper.urlTillIndex(index))
+//            }
+//        }
 
         states: [
             State {
@@ -113,5 +126,13 @@ Item {
                 NumberAnimation { target: popup; properties: "height"; to: 0; duration: 150 }
             }
         ]
+    }
+
+    Component.onCompleted: {
+        completionForDirList.setUrl(urlWrapper.urlTillIndex(index))
+    }
+
+    KCompletionWrapper {
+        id: completionForDirList
     }
 }

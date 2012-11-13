@@ -8,7 +8,6 @@ KCompletionWrapper::KCompletionWrapper(QDeclarativeItem *parent)
     , m_urlTillLastSlash()
     , m_searchString()
     , m_completion()
-    , m_job(0)
     , m_entryList(new QStringList())
     , m_hiddenEntryList(new QStringList())
     , m_matches()
@@ -117,13 +116,12 @@ QString KCompletionWrapper::nextMatch()
 
 void KCompletionWrapper::attemptFetchNewCompletionStrings()
 {
-    // Regardless if KIO is still running from a previous listjob, reset it's pointer.
-    m_job = 0;
     m_internalListIndex = -1;
 
-    m_job = KIO::listDir(KUrl(m_urlTillLastSlash));
-    m_job->addMetaData("details", "0");
+    KIO::ListJob* job = KIO::listDir(KUrl(m_urlTillLastSlash));
+    job->addMetaData("details", "0");
     qDebug() << "(C++) URL send to KIO:" << m_urlTillLastSlash;
+    qDebug() << "(C++) m_job:" << job;
     qDebug() << "(C++) cleared entry lists";
     m_entryList->clear();
     m_hiddenEntryList->clear();
@@ -136,12 +134,20 @@ void KCompletionWrapper::attemptFetchNewCompletionStrings()
         emit resultsChanged();
     }
 
-    m_job->connect(m_job, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)), this, SLOT(storeFolderEntries(KIO::Job*, KIO::UDSEntryList)));
+    job->connect(job, SIGNAL(entries(KIO::Job*, KIO::UDSEntryList)), this, SLOT(storeFolderEntries(KIO::Job*, KIO::UDSEntryList)));
+
+    // Apparently it is possible that the listDir for the home folder returns TWICE! Thus storeFolderEntries. However, the result is only
+    // emited once so i just use the result to indicate that the entries are in and can be send to QML.
+    job->connect(job, SIGNAL(result(KJob*)), this, SLOT(jobResults(KJob*)));
 }
 
 void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryList &list)
 {
-    qDebug() << "(C++) storeFolderEntries()";
+    Q_UNUSED(job)
+    KIO::SimpleJob* simpleJob = qobject_cast<KIO::SimpleJob *>(job);
+    qDebug() << "------------------------------------------------------------------------------";
+    qDebug() << "(C++) storeFolderEntries() ------------- SLOT FROM entries EMIT -------------" << simpleJob->url() << "job:" << job;
+    qDebug() << "------------------------------------------------------------------------------";
 
     foreach(const KIO::UDSEntry& entry, list)
     {
@@ -157,9 +163,12 @@ void KCompletionWrapper::storeFolderEntries(KIO::Job *job, const KIO::UDSEntryLi
             }
         }
     }
+}
 
-    qDebug() << "(C++) Entrylist:" << *m_entryList;
-
+void KCompletionWrapper::jobResults(KJob *job)
+{
+    qDebug() << "(C++) jobResults()";
+    Q_UNUSED(job)
     m_completion.setItems(*m_entryList);
     if(m_completion.makeCompletion(m_searchString).isEmpty())
     {

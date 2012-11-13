@@ -31,6 +31,7 @@ public slots:
 
 private slots:
     void storeFolderEntries(KIO::Job * job, const KIO::UDSEntryList &list);
+    void jobResults(KJob * job);
     void storeMatches(QString);
     
 private:
@@ -38,7 +39,6 @@ private:
     QString m_urlTillLastSlash;
     QString m_searchString;
     KCompletion m_completion;
-    KIO::ListJob* m_job;
     QStringList* m_entryList;
     QStringList* m_hiddenEntryList;
     QStringList m_matches;

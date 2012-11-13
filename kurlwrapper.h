@@ -46,6 +46,9 @@ public:
     // to the index passed to this function. It basically reconstructs the URL till this index and calls setUrl.
     Q_INVOKABLE void updateUrlBasedOnIndex(int index);
 
+    // This returns the current URL till the given index.
+    Q_INVOKABLE QString urlTillIndex(int index);
+
 private:
     void updatePathModel();
     void updateUrlPath();

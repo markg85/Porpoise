@@ -54,6 +54,30 @@ void KUrlWrapper::updateUrlBasedOnIndex(int index)
     updateUrlPath();
 }
 
+QString KUrlWrapper::urlTillIndex(int index)
+{
+    index++;
+    qDebug() << "(C++) urlTillIndex()";
+    QStringList currentList = m_pathModel->stringList();
+
+    qDebug() << "(C++) urlTillIndex()" << index;
+    qDebug() << "(C++) urlTillIndex()" << currentList;
+    if(index >= currentList.count())
+    {
+        return QString();
+    }
+
+    while(currentList.count() > index)
+    {
+        currentList.removeLast();
+    }
+
+    KUrl newUrl = m_url;
+    newUrl.setPath(separator() + currentList.join(QString(separator())) + separator());
+
+    return newUrl.url();
+}
+
 void KUrlWrapper::updatePathModel()
 {
 //    m_pathModel = path().split(separator(), QString::SkipEmptyParts);
@@ -66,5 +90,5 @@ void KUrlWrapper::updatePathModel()
 
 void KUrlWrapper::updateUrlPath()
 {
-    m_url.setPath(m_pathModel->stringList().join(QString(separator())));
+    m_url.setPath(separator() + m_pathModel->stringList().join(QString(separator())));
 }
