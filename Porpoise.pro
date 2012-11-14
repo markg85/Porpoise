@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     pathmodel.cpp \
     util.cpp \
     kcompletionwrapper.cpp \
-    testclass.cpp
+    testclass.cpp \
+    dirmodel.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -49,4 +50,5 @@ HEADERS += \
     pathmodel.h \
     util.h \
     kcompletionwrapper.h \
-    testclass.h
+    testclass.h \
+    dirmodel.h

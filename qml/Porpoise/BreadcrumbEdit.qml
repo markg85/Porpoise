@@ -128,18 +128,19 @@ Item {
             }
         }
 
-        KCompletionWrapper {
-            id: completionWrapper
+    }
 
-            onResultsChanged: {
-                console.log("results changed!! >> " + results)
-                if(results.length > 0) {
-                    bcEdit.currentValue = nextMatch()
-                    bcEdit.attemptCompletion()
-                } else {
-                    bcEdit.currentValue = ""
-                    completerText.text = bcEdit.currentValue
-                }
+    KCompletionWrapper {
+        id: completionWrapper
+
+        onResultsChanged: {
+            console.log("results changed!! >> " + results)
+            if(results.length > 0) {
+                bcEdit.currentValue = nextMatch()
+                bcEdit.attemptCompletion()
+            } else {
+                bcEdit.currentValue = ""
+                completerText.text = bcEdit.currentValue
             }
         }
     }

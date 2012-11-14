@@ -10,62 +10,25 @@ Rectangle {
     // To prevent duplication it's created in the main file and passed to the elements that need is.
     KUrlWrapper {
         id: urlWrapper
-        url: "~/aaa/bbb/ccc/ddd/eee/fff/"
+        url: "~/massive_files/"
+
+        onUrlChanged: {
+            console.log("*************** onUrlChanged: " + url)
+        }
     }
 
     BreadcrumbBar {
+        id: breadCrumbBar
         urlWrapper: urlWrapper
         height: 30
         width: parent.width
+        z: 2
     }
 
-    Rectangle {
-        x: 100
-        y: 100
-        width: 100
-        height: 20
-        color: "green"
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                urlWrapper.url = "~"
-            }
-        }
-    }
-
-    //TextInput {
-    TextInput {
-        x: 100
-        y: 150
-        color: "orange"
-        width: 100
-        height: 20
-
-        Keys.onPressed: {
-            console.log("pressed...")
-        }
-
-    }
-
-    KCompletionWrapper {
-        id: testCompletion
-        property string url: "/home/mark"
-
-        onUrlChanged: {
-            console.log("(JS) URL: " + url)
-            testCompletion.setUrl(url)
-        }
-
-        Timer {
-            id: addChar
-            interval: 1000
-            onTriggered: parent.url += "/"
-        }
-
-        Component.onCompleted: {
-            testCompletion.setUrl(url)
-            addChar.start()
-        }
+    ViewContainer {
+        width: parent.width
+        anchors.top: breadCrumbBar.bottom
+        anchors.bottom: parent.bottom
+        z: 1
     }
 }
