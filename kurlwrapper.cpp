@@ -44,15 +44,20 @@ void KUrlWrapper::append(QString entry)
 
 void KUrlWrapper::updateUrlBasedOnIndex(int index)
 {
-    if(index == (m_pathModel->rowCount() - 1))
-    {
-        return;
+    int newIndex = index + 1;
+    QStringList currentPath = m_pathModel->stringList();
+    while (currentPath.count() > newIndex) {
+        currentPath.removeLast();
     }
 
+    m_url.setPath(separator() + currentPath.join(QString(separator())));
+    emit urlChanged();
+}
+
+void KUrlWrapper::updateUrlModel(int index)
+{
     int rowsToRemove = -1 + m_pathModel->rowCount() - index;
     m_pathModel->removeRows(index + 1, rowsToRemove);
-    updateUrlPath();
-    emit urlChanged();
 }
 
 QString KUrlWrapper::urlTillIndex(int index)

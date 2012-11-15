@@ -67,6 +67,7 @@ public:
     Q_INVOKABLE int indexForUrl(const QString &url) const;
 
     Q_INVOKABLE QVariantMap get(int index) const;
+    Q_INVOKABLE void run(int index) const;
 
 protected Q_SLOTS:
     void showPreview(const KFileItem &item, const QPixmap &preview);

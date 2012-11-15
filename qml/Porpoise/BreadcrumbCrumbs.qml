@@ -8,19 +8,21 @@ Rectangle {
         id: pathModelCleanupTimer
         running: false
         repeat: false
-        onTriggered: urlWrapper.updateUrlBasedOnIndex(index)
+        onTriggered: urlWrapper.updateUrlModel(index)
     }
 
 
     function breadcrumbButtonPressed(index) {
 
+        urlWrapper.updateUrlBasedOnIndex(index)
+        var newIndex = index + 1 // +1 because the first element in the list is for QML internal stuff.
         var iAnimationOffsetPerItem = 10 // in ms
-        var iIemsToAnimateOut = urlWrapper.rowCount() - (index + 1)
+        var iIemsToAnimateOut = urlWrapper.rowCount() - newIndex
         var iItemsCountdown = iIemsToAnimateOut
         var iAnimationTime = 150
 
-        for(var num = index + 1; num < urlWrapper.rowCount(); ++num) {
-            repeaterElement.children[num].removeElement(iAnimationTime, iItemsCountdown * iAnimationOffsetPerItem)
+        for(var i = newIndex + 1; i < repeaterElement.contentItem.children.length; ++i) {
+            repeaterElement.contentItem.children[i].removeElement(iAnimationTime, iItemsCountdown * iAnimationOffsetPerItem)
             iItemsCountdown--
         }
 
@@ -31,7 +33,6 @@ Rectangle {
 
     function breadcrumbButtonAddAfterIndex(index, entryName) {
 
-//        breadcrumbButtonPressed(index)
         urlWrapper.updateUrlBasedOnIndex(index + 1)
         urlWrapper.append(entryName)
     }
@@ -50,13 +51,13 @@ Rectangle {
         }
     }
 
-    Row {
-        id: repeaterElement
 
-        Repeater {
-            id: bcRepeater
-            model: urlWrapper.pathModel
-            delegate: BreadcrumbButton {lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
-        }
+    ListView {
+        id: repeaterElement
+        interactive: false
+        anchors.fill: parent
+        orientation: ListView.Horizontal
+        model: urlWrapper.pathModel
+        delegate: BreadcrumbButton { lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
     }
 }

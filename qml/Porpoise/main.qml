@@ -10,7 +10,7 @@ Rectangle {
     // To prevent duplication it's created in the main file and passed to the elements that need is.
     KUrlWrapper {
         id: urlWrapper
-        url: "~/massive_files/"
+        url: "~/"
 
         onUrlChanged: {
             console.log("*************** onUrlChanged: " + url)

@@ -10,27 +10,20 @@ Rectangle {
         url: urlWrapper.url
     }
 
+    Component {
+        id: iconDelegate
 
-//    ListView {
-//        anchors.fill: parent
-//        model: dirModel
-//        cacheBuffer: 100
-//        delegate: Text {
-//            text: Name
-//        }
-//    }
+        Column {
 
-    GridView {
-        anchors.fill: parent
-        model: dirModel
-        cacheBuffer: 100
-//        delegate: Text {
-//            text: IconName
-//        }
-        delegate: Column {
-                QtExtraComponents.QIconItem {
+            width: 80
+
+            Behavior on x { NumberAnimation { duration: 400; easing.type: Easing.OutBack } }
+            Behavior on y { NumberAnimation { duration: 400; easing.type: Easing.OutBack } }
+
+            QtExtraComponents.QIconItem {
                 width: 48
                 height: 48
+                anchors.horizontalCenter: parent.horizontalCenter
                 icon: IconName
 
                 MouseArea {
@@ -38,19 +31,34 @@ Rectangle {
                     onClicked: {
                         if(dirModel.get(index).isDir) {
                             urlWrapper.url = dirModel.get(index).url
+                        } else {
+                            dirModel.run(index)
                         }
-
-
 
                         console.log("Clicked on index: " + dirModel.get(index).url)
                     }
                 }
             }
-                Text {
-                    text: Name
-                }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+//                text: "Name"
+                text: Name
+                wrapMode: Text.Wrap
+                maximumLineCount: 2
+                elide: Text.ElideRight
+            }
         }
     }
 
+    GridView {
+        anchors.fill: parent
+        model: dirModel
+        cacheBuffer: 100
+        cellWidth: 80
+        cellHeight: 80
 
+        delegate: iconDelegate
+    }
 }

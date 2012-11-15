@@ -66,7 +66,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         bcButton.lastItem = true
-                        bcButton.parent.parent.breadcrumbButtonPressed(index)
+                        repeaterElement.parent.breadcrumbButtonPressed(index)
                         if(bcBar.currentPopup) {
                             bcBar.currentPopup.closePopup()
                         }
@@ -79,9 +79,9 @@ Item {
 
         BreadcrumbDropdown {
             onEntryClicked: {
-                bcButton.parent.parent.breadcrumbButtonAddAfterIndex(index, entryName)
+                repeaterElement.parent.breadcrumbButtonAddAfterIndex(index, entryName)
 
-                var obj = bcRepeater.itemAt(index + 1)
+                var obj = repeaterElement.contentItem.children[index + 1]
                 if(obj) {
                     obj.lastItem = true
                     obj.externalLastItemChanged = true

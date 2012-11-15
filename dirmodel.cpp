@@ -120,6 +120,14 @@ QVariantMap DirModel::get(int i) const
     return ret;
 }
 
+void DirModel::run(int i) const
+{
+    QModelIndex modelIndex = index(i, 0);
+
+    KFileItem item = itemForIndex(modelIndex);
+    item.run();
+}
+
 QVariant DirModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
