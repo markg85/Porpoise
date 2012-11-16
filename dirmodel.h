@@ -21,6 +21,7 @@
 #define DIRMODEL_H
 
 #include <KDirModel>
+#include "fileitem.h"
 #include <QVariant>
 
 class QTimer;
@@ -67,6 +68,7 @@ public:
     Q_INVOKABLE int indexForUrl(const QString &url) const;
 
     Q_INVOKABLE QVariantMap get(int index) const;
+    Q_INVOKABLE QObject* itemForIndex(int index) const;
     Q_INVOKABLE void run(int index) const;
 
 protected Q_SLOTS:

@@ -108,7 +108,7 @@ QVariantMap DirModel::get(int i) const
 {
     QModelIndex modelIndex = index(i, 0);
 
-    KFileItem item = itemForIndex(modelIndex);
+    KFileItem item = KDirModel::itemForIndex(modelIndex);
     QString url = item.url().prettyUrl();
     QString mimeType = item.mimetype();
 
@@ -120,11 +120,18 @@ QVariantMap DirModel::get(int i) const
     return ret;
 }
 
+QObject* DirModel::itemForIndex(int i) const
+{
+    QModelIndex modelIndex = index(i, 0);
+    FileItem* fItem = new FileItem(KDirModel::itemForIndex(modelIndex));
+    return fItem;
+}
+
 void DirModel::run(int i) const
 {
     QModelIndex modelIndex = index(i, 0);
 
-    KFileItem item = itemForIndex(modelIndex);
+    KFileItem item = KDirModel::itemForIndex(modelIndex);
     item.run();
 }
 
@@ -136,19 +143,19 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case UrlRole: {
-        KFileItem item = itemForIndex(index);
+        KFileItem item = KDirModel::itemForIndex(index);
         return item.url().prettyUrl();
     }
     case MimeTypeRole: {
-        KFileItem item = itemForIndex(index);
+        KFileItem item = KDirModel::itemForIndex(index);
         return item.mimetype();
     }
     case IconName: {
-        KFileItem item = itemForIndex(index);
+        KFileItem item = KDirModel::itemForIndex(index);
         return item.iconName();
     }
     case Thumbnail: {
-        KFileItem item = itemForIndex(index);
+        KFileItem item = KDirModel::itemForIndex(index);
         QImage preview = QImage(m_screenshotSize, QImage::Format_ARGB32_Premultiplied);
 
         if (m_imageCache->findImage(item.url().prettyUrl(), &preview)) {

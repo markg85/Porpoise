@@ -29,13 +29,17 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if(dirModel.get(index).isDir) {
+                      var currentFileItem = dirModel.itemForIndex(index)
+                        if(currentFileItem.isDir) {
                             urlWrapper.url = dirModel.get(index).url
                         } else {
-                            dirModel.run(index)
+                            currentFileItem.run()
                         }
 
-                        console.log("Clicked on index: " + dirModel.get(index).url)
+//                        console.log("Clicked on index: " + dirModel.get(index).url)
+                        console.log("Clicked on index: " + currentFileItem)
+                        console.log("isDir: " + currentFileItem.isDir)
+                        console.log("Clicked on index: " + currentFileItem)
                     }
                 }
             }
@@ -43,7 +47,6 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
-//                text: "Name"
                 text: Name
                 wrapMode: Text.Wrap
                 maximumLineCount: 2

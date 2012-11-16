@@ -51,4 +51,5 @@ HEADERS += \
     util.h \
     kcompletionwrapper.h \
     testclass.h \
-    dirmodel.h
+    dirmodel.h \
+    fileitem.h
