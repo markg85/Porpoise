@@ -16,19 +16,7 @@ Item {
     // Used for calculationg the width of this button. This included the ">" arrow.
     property int additionalTextMargin: 5 // left and right
     property int arrawRectHeightAndWidth: height // The height is also the width
-    property int textRectWidth: 0
-    property bool externalLastItemChanged: false
-
-    Component.onCompleted: {
-        // Doing this "binding" (assigning) in here so that the value isn't bound to buttonText.width.
-        textRectWidth = buttonText.width + (additionalTextMargin * 2)
-    }
-
-    onExternalLastItemChangedChanged: {
-        if(externalLastItemChanged) {
-            textRectWidth = buttonText.width + (additionalTextMargin * 2)
-        }
-    }
+    property int textRectWidth: buttonText.width + (additionalTextMargin * 2)
 
     function removeElement(iAnimationTime, iPrePauseTime) {
         bcButton.animationTime = iAnimationTime
@@ -84,7 +72,6 @@ Item {
                 var obj = repeaterElement.contentItem.children[index + 1]
                 if(obj) {
                     obj.lastItem = true
-                    obj.externalLastItemChanged = true
                 }
             }
 

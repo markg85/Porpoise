@@ -55,9 +55,32 @@ Rectangle {
     ListView {
         id: repeaterElement
         interactive: false
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         orientation: ListView.Horizontal
         model: urlWrapper.pathModel
         delegate: BreadcrumbButton { lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
+        cacheBuffer: 100
+
+        onContentWidthChanged: {
+            if(contentItem.width > width) {
+                behContentX.enabled = false
+                contentX = Math.abs((width - contentItem.width))
+                behContentX.enabled = true
+            }
+        }
+
+        onWidthChanged: {
+            if(contentItem.width > width) {
+                behContentX.enabled = false
+                contentX = Math.abs((width - contentItem.width))
+                behContentX.enabled = true
+            }
+        }
+
+        Behavior on contentX {
+            id: behContentX
+            NumberAnimation { duration: 150 }
+        }
     }
 }

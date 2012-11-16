@@ -58,6 +58,7 @@ Rectangle {
         cacheBuffer: 100
         cellWidth: 80
         cellHeight: 80
+        boundsBehavior: Flickable.StopAtBounds
 
         delegate: iconDelegate
     }
