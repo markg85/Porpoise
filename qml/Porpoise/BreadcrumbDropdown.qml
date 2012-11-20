@@ -10,25 +10,28 @@ Item {
     signal entryClicked(string entryName)
 
     onClosePopup: {
-        arrowImage.state = "normal"
+        arrowSymbol.state = "normal"
     }
 
-
-    Image {
-        id: arrowImage
-        anchors.centerIn: parent
-        source: "arrowIcon.png"
+    Text {
+        id: arrowSymbol
+        property int pointSize: 6
+        y: (parent.height / 2) + 2 - pointSize // Somehow this font is some "points" off... Thus centering manually.
+        anchors.horizontalCenter: parent.horizontalCenter
+        font.family: "FontAwesome"
+        text: "\uf054" // ">" symbol
+        font.pointSize: pointSize
 
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: arrowImage; rotation: 0 }
+                PropertyChanges { target: arrowSymbol; rotation: 0 }
                 PropertyChanges { target: arrowContainer; popupShown: false }
                 PropertyChanges { target: popup; state: "hide" }
             },
             State {
                 name: "rotateDown"
-                PropertyChanges { target: arrowImage; rotation: 90 }
+                PropertyChanges { target: arrowSymbol; rotation: 90 }
                 PropertyChanges { target: arrowContainer; popupShown: true }
                 PropertyChanges { target: popup; state: "show" }
                 PropertyChanges { target: bcBar; currentPopup: bcDropdown }
@@ -62,14 +65,14 @@ Item {
             }
             onClicked: {
                 if(parent.popupShown) {
-                    arrowImage.state = "normal"
+                    arrowSymbol.state = "normal"
                 } else {
                     if(bcBar.currentPopup) {
                         bcBar.currentPopup.closePopup()
                     }
 
                     // This line _must_ be after the lines above! Do not change!
-                    arrowImage.state = "rotateDown"
+                    arrowSymbol.state = "rotateDown"
                 }
             }
         }
