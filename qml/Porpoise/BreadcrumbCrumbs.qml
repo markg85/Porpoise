@@ -2,6 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
 
+    color: "transparent"
+
     // This timer fires to update the url path model _after_ the animations have been run.
     Timer {
         property int index: 0

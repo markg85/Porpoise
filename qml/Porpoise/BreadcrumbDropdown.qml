@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import Porpoise 0.1
 import org.kde.plasma.extras 0.1 as PlasmaExtras
+import "javascript/fontawesome.js" as FontAwesome
 
 Item {
 
@@ -19,7 +20,7 @@ Item {
         y: (parent.height / 2) + 2 - pointSize // Somehow this font is some "points" off... Thus centering manually.
         anchors.horizontalCenter: parent.horizontalCenter
         font.family: "FontAwesome"
-        text: "\uf054" // ">" symbol
+        text: FontAwesome.Icon.ChevronRight
         font.pointSize: pointSize
 
         states: [

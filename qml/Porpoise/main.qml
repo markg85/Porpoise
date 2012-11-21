@@ -1,8 +1,10 @@
 import QtQuick 1.1
 import Porpoise 0.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import "javascript/fontawesome.js" as FontAwesome
 
 Rectangle {
+    id: root
     width: 800
     height: 600
 
@@ -22,18 +24,97 @@ Rectangle {
         }
     }
 
-    BreadcrumbBar {
-        id: breadCrumbBar
-        urlWrapper: urlWrapper
-        height: 30
+    Rectangle {
+        id: head
+        height: 100
         width: parent.width
+        color: "grey"
         z: 2
+
+
+        Item {
+            width: parent.width
+            height: 30
+            anchors.verticalCenter: parent.verticalCenter
+            Rectangle {
+                id: leftButtons
+                width: 99
+                height: 30
+                color: "red"
+                Row {
+                    y: 2
+                    width: parent.width
+                    height: parent.height
+                    Item {
+                        width: parent.width / 3
+                        height: parent.height
+                        Text {
+                            anchors.centerIn: parent
+                            font.family: "FontAwesome"
+                            text: FontAwesome.Icon.ChevronLeft
+                            font.pointSize: 15
+                        }
+                    }
+                    Item {
+                        width: parent.width / 3
+                        height: parent.height
+                        Text {
+                            anchors.centerIn: parent
+                            font.family: "FontAwesome"
+                            text: FontAwesome.Icon.ChevronRight
+                            font.pointSize: 15
+                        }
+                    }
+                    Item {
+                        width: parent.width / 3
+                        height: parent.height
+                        Text {
+                            property int angle: 0
+                            id: test
+                            anchors.centerIn: parent
+                            font.family: "FontAwesome"
+                            text: FontAwesome.Icon.Refresh
+                            font.pointSize: 15
+                        }
+                    }
+                }
+            }
+
+            BreadcrumbBar {
+                id: breadCrumbBar
+                urlWrapper: urlWrapper
+                height: 30
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: leftButtons.right
+                anchors.right: rightButtons.left
+            }
+
+            Item {
+                id: rightButtons
+                width: 30
+                height: 30
+                y: 2
+                anchors.right: parent.right
+
+                Text {
+                    anchors.centerIn: parent
+                    font.family: "FontAwesome"
+                    text: FontAwesome.Icon.Cog
+                    font.pointSize: 15
+                }
+            }
+        }
     }
 
     ViewContainer {
         width: parent.width
-        anchors.top: breadCrumbBar.bottom
+        anchors.top: head.bottom
         anchors.bottom: parent.bottom
+        clip: true
         z: 1
     }
+
+
+
+
 }
