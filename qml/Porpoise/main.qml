@@ -42,38 +42,33 @@ Rectangle {
                 height: 30
                 color: "red"
                 Row {
-                    y: 2
                     width: parent.width
                     height: parent.height
                     Item {
                         width: parent.width / 3
                         height: parent.height
-                        Text {
-                            anchors.centerIn: parent
-                            font.family: "FontAwesome"
-                            text: FontAwesome.Icon.ChevronLeft
+                        FontAwesomeIcon {
+                            anchors.fill: parent
+                            iconName: FontAwesome.Icon.ChevronLeft
                             font.pointSize: 15
                         }
                     }
                     Item {
                         width: parent.width / 3
                         height: parent.height
-                        Text {
-                            anchors.centerIn: parent
-                            font.family: "FontAwesome"
-                            text: FontAwesome.Icon.ChevronRight
+                        FontAwesomeIcon {
+                            anchors.fill: parent
+                            iconName: FontAwesome.Icon.ChevronRight
                             font.pointSize: 15
                         }
                     }
                     Item {
                         width: parent.width / 3
                         height: parent.height
-                        Text {
-                            property int angle: 0
-                            id: test
-                            anchors.centerIn: parent
-                            font.family: "FontAwesome"
-                            text: FontAwesome.Icon.Refresh
+
+                        FontAwesomeIcon {
+                            anchors.fill: parent
+                            iconName: FontAwesome.Icon.Refresh
                             font.pointSize: 15
                         }
                     }
@@ -93,13 +88,11 @@ Rectangle {
                 id: rightButtons
                 width: 30
                 height: 30
-                y: 2
                 anchors.right: parent.right
 
-                Text {
-                    anchors.centerIn: parent
-                    font.family: "FontAwesome"
-                    text: FontAwesome.Icon.Cog
+                FontAwesomeIcon {
+                    anchors.fill: parent
+                    iconName: FontAwesome.Icon.Cog
                     font.pointSize: 15
                 }
             }

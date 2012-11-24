@@ -53,3 +53,6 @@ HEADERS += \
     testclass.h \
     dirmodel.h \
     fileitem.h
+
+OTHER_FILES += \
+    qml/Porpoise/colorstyles/porpoise.js
