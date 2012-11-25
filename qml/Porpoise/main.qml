@@ -1,12 +1,19 @@
 import QtQuick 1.1
 import Porpoise 0.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
-import "javascript/fontawesome.js" as FontAwesome
+import "javascript/util.js" as JsUtil
 
 Rectangle {
     id: root
     width: 800
     height: 600
+
+//    Text {
+//        id: name
+////        text: JsUtil.Theme.Application.background.color
+////        text: JsUtil.FA.Glass
+
+//    }
 
     // Load the "FontAwesome" font for the monochrome icons.
     FontLoader {
@@ -50,7 +57,7 @@ Rectangle {
                         height: parent.height
                         FontAwesomeIcon {
                             anchors.fill: parent
-                            iconName: FontAwesome.Icon.ChevronLeft
+                            iconName: JsUtil.FA.ChevronLeft
                             font.pointSize: 15
                         }
                     }
@@ -59,7 +66,7 @@ Rectangle {
                         height: parent.height
                         FontAwesomeIcon {
                             anchors.fill: parent
-                            iconName: FontAwesome.Icon.ChevronRight
+                            iconName: JsUtil.FA.ChevronRight
                             font.pointSize: 15
                         }
                     }
@@ -69,7 +76,7 @@ Rectangle {
 
                         FontAwesomeIcon {
                             anchors.fill: parent
-                            iconName: FontAwesome.Icon.Refresh
+                            iconName: JsUtil.FA.Refresh
                             font.pointSize: 15
                         }
                     }
@@ -93,7 +100,7 @@ Rectangle {
 
                 FontAwesomeIcon {
                     anchors.fill: parent
-                    iconName: FontAwesome.Icon.Cog
+                    iconName: JsUtil.FA.Cog
                     font.pointSize: 15
                 }
             }
@@ -107,8 +114,4 @@ Rectangle {
         clip: true
         z: 1
     }
-
-
-
-
 }

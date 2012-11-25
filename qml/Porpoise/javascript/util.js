@@ -1,5 +1,6 @@
 .pragma library
+Qt.include("fontawesome.js")
+Qt.include("../colorstyles/porpoise.js")
 
-function func() {
-    
-}
+var Theme = Style
+var FA = Icon

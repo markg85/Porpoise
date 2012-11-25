@@ -1,8 +1,8 @@
 import QtQuick 1.1
 import Porpoise 0.1
-import org.kde.qtextracomponents 0.1 as QtExtraComponents
+import "../javascript/util.js" as JsUtil
 
-// LView because the full name: "ListView" would be confusion with the default QML component ListView.
+// LView because the full name: "ListView" would be confusing with the default QML component ListView.
 
 Item {
 
@@ -47,31 +47,28 @@ Item {
             width: list.width
             height: 32 + 10
 
-            property color background: "transparent"
-            property color bordercolor: "transparent"
-            property color highlightcolor: "#676664"
-            property color textcolor: "#A4A3A1"
-            property color imageBorderColor: "#EFE9EB"
-            property color imageBackground: "#FFFEFF"
-
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
-                    itemRow.background = "#F9EBE8"
-                    itemRow.bordercolor = "#F0E2DF"
-                    itemRow.highlightcolor = "#E05B3C"
-                    itemRow.textcolor = "#E79685"
-                    itemRow.imageBorderColor = "#F0E2DF"
-                    itemRow.imageBackground = "#FFFCFD"
+                    itemBackground.color = JsUtil.Theme.ViewContainer.ItemStates.hover.color
+                    itemBackground.border.color = JsUtil.Theme.ViewContainer.ItemStates.hover.borderColor
+                    content.color = JsUtil.Theme.ViewContainer.ContentStates.hover.highlight
+                    normalTextOne.color = JsUtil.Theme.ViewContainer.ContentStates.hover.color
+                    normalTextTwo.color = JsUtil.Theme.ViewContainer.ContentStates.hover.color
+                    normalTextThree.color = JsUtil.Theme.ViewContainer.ContentStates.hover.color
+                    imageIcon.color = JsUtil.Theme.ViewContainer.ItemStates.hover.imageBackground
+                    imageIcon.border.color = JsUtil.Theme.ViewContainer.ItemStates.hover.imageBorderColor
                 }
                 onExited: {
-                    itemRow.background = "transparent"
-                    itemRow.bordercolor = "transparent"
-                    itemRow.highlightcolor = "#676664"
-                    itemRow.textcolor = "#A4A3A1"
-                    itemRow.imageBorderColor = "#EFE9EB"
-                    itemRow.imageBackground = "#FFFEFF"
+                    itemBackground.color = JsUtil.Theme.ViewContainer.ItemStates.normal.color
+                    itemBackground.border.color = JsUtil.Theme.ViewContainer.ItemStates.normal.borderColor
+                    content.color = JsUtil.Theme.ViewContainer.ContentStates.normal.highlight
+                    normalTextOne.color = JsUtil.Theme.ViewContainer.ContentStates.normal.color
+                    normalTextTwo.color = JsUtil.Theme.ViewContainer.ContentStates.normal.color
+                    normalTextThree.color = JsUtil.Theme.ViewContainer.ContentStates.normal.color
+                    imageIcon.color = JsUtil.Theme.ViewContainer.ItemStates.normal.imageBackground
+                    imageIcon.border.color = JsUtil.Theme.ViewContainer.ItemStates.normal.imageBorderColor
                 }
                 onClicked: {
                     var currentFileItem = dirModel.itemForIndex(index)
@@ -84,10 +81,11 @@ Item {
             }
 
             Rectangle {
+                id: itemBackground
                 width: parent.width - 1 // needed for the border. The entire border should be "inline" in Qt5. Not so in Qt4.
                 height: parent.height
-                color: itemRow.background
-                border.color: itemRow.bordercolor
+                color: JsUtil.Theme.ViewContainer.ItemStates.normal.color
+                border.color: JsUtil.Theme.ViewContainer.ItemStates.normal.borderColor
                 border.width: 1
                 radius: 5
 
@@ -104,12 +102,12 @@ Item {
                         id: imageIcon
                         width: 32
                         height: 32
-                        color: itemRow.imageBackground
-                        border.color: itemRow.imageBorderColor
+                        color: JsUtil.Theme.ViewContainer.ItemStates.normal.imageBackground
+                        border.color: JsUtil.Theme.ViewContainer.ItemStates.normal.imageBorderColor
                         border.width: 1
                         KGraphicsItem {
-                            width: 24
-                            height: 24
+                            width: 28
+                            height: 28
                             anchors.centerIn: parent
                             icon: decoration
                         }
@@ -118,27 +116,31 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         width: items.width - imageIcon.width
                         Text {
-                            color: itemRow.highlightcolor
+                            id: content
+                            color: JsUtil.Theme.ViewContainer.ContentStates.normal.highlight
                             text: BaseName
                             font.bold: true
                             elide: Text.ElideRight
                         }
                         Text {
-                            color: itemRow.textcolor
+                            id: normalTextOne
+                            color: JsUtil.Theme.ViewContainer.ContentStates.normal.color
                             text: Extension
                         }
                     }
                     Text {
+                        id: normalTextTwo
                         width: date.width
                         anchors.verticalCenter: parent.verticalCenter
-                        color: itemRow.textcolor
+                        color: JsUtil.Theme.ViewContainer.ContentStates.normal.color
                         text: TimeString
                         elide: Text.ElideRight
                     }
                     Text {
+                        id: normalTextThree
                         width: type.width
                         anchors.verticalCenter: parent.verticalCenter
-                        color: itemRow.textcolor
+                        color: JsUtil.Theme.ViewContainer.ContentStates.normal.color
                         text: MimeComment
                         elide: Text.ElideRight
                     }
@@ -148,18 +150,9 @@ Item {
     }
 
     ListView {
-        property int iconWidth: 48
-        property int iconHeight: 48
-        property int textWidth: iconWidth * 2 - (itemHorizontalSpacing * 2)
-        property int itemWidth: iconWidth * 2
-        property int itemHeight: iconHeight + 40
-        property int itemHorizontalSpacing: 5
-        property int itemVerticalSpacing: 5
-        property int newCellWidthValue: 0
 
         id: list
         clip: true
-//        anchors.fill: parent
         width: parent.width
         anchors.top: header.bottom
         anchors.bottom: parent.bottom

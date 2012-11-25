@@ -57,11 +57,11 @@ var Style = {
     // These settings are all ements inside a view container. This could be the icon view, list view, tree view. All of them.
     // View specifics as in how the icon view should be spaced or how list view should be spaced is - for now - determined in the actual views.
     ViewContainer: {
-        fileExtension: {
+        FileExtension: {
             visible: true,
             color: "red"
         },
-        contentStates: {
+        ContentStates: {
             normal: {
                 highlight: "#676664",
                 color: "#A4A3A1",
@@ -82,6 +82,7 @@ var Style = {
         ItemStates: {
             normal: {
                 color: "transparent",
+                borderColor: "transparent",
                 imageBorderColor: "#EFE9EB",
                 imageBackground: "#FFFEFF"
             },
