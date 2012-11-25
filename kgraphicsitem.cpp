@@ -3,6 +3,7 @@
 #include <KIconLoader>
 #include <KIconEffect>
 #include <QPainter>
+#include <QDebug>
 
 KGraphicsItem::KGraphicsItem(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
@@ -22,9 +23,9 @@ void KGraphicsItem::setIcon(const QVariant &icon)
         m_icon = KIcon(icon.toString());
         m_pixmap = m_icon.pixmap(QSize(width(), height()));
     } else if(icon.canConvert<QPixmap>()) {
-        m_pixmap = icon.value<QPixmap>();
+        m_pixmap = icon.value<QPixmap>().scaled(QSize(width(), height()), Qt::KeepAspectRatio);;
     } else if(icon.canConvert<QImage>()) {
-        m_pixmap = QPixmap::fromImage(icon.value<QImage>());
+        m_pixmap = QPixmap::fromImage(icon.value<QImage>().scaled(QSize(width(), height()), Qt::KeepAspectRatio));
     }
     update();
 }
@@ -86,6 +87,9 @@ void KGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     if (m_pixmap.isNull()) {
         return;
     }
+
+//    QPixmap scaledPixmap = m_pixmap.scaled(QSize(width(), height()), Qt::KeepAspectRatio);
+
     //do without painter save, faster and the support can be compiled out
     const bool wasAntiAlias = painter->testRenderHint(QPainter::Antialiasing);
     const bool wasSmoothTransform = painter->testRenderHint(QPainter::SmoothPixmapTransform);
@@ -100,7 +104,11 @@ void KGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 //        m_pixmap.paint(painter, boundingRect().toRect(), Qt::AlignCenter, isEnabled() ? QIcon::Normal : QIcon::Disabled);
 //        painter->drawPixmap(boundingRect().toRect(), m_pixmap);
 //    }
-    painter->drawPixmap(boundingRect().toRect(), m_pixmap);
+
+    int xOffset = (width() - m_pixmap.width()) / 2;
+    int yOffset = (height() - m_pixmap.height()) / 2;
+
+    painter->drawPixmap(xOffset, yOffset, m_pixmap);
 
     painter->setRenderHint(QPainter::Antialiasing, wasAntiAlias);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, wasSmoothTransform);
