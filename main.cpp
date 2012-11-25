@@ -6,6 +6,7 @@
 #include "kurlwrapper.h"
 #include "kcompletionwrapper.h"
 #include "dirmodel.h"
+#include "kgraphicsitem.h"
 #include "util.h"
 #include "testclass.h"
 
@@ -20,11 +21,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<KUrlWrapper>("Porpoise", 0, 1, "KUrlWrapper");
     qmlRegisterType<KCompletionWrapper>("Porpoise", 0, 1, "KCompletionWrapper");
     qmlRegisterType<DirModel>("Porpoise", 0, 1, "DirModel");
+    qmlRegisterType<KGraphicsItem>("Porpoise", 0, 1, "KGraphicsItem");
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();
 
 //    TestClass test;
+//    test.folderThumbnails("/home/mark/Images/");
 //    test.fetchFolder("/home/mark/massive_files/");
 //    test.fetchFolder("/home/mark/lesser_massive");
 
