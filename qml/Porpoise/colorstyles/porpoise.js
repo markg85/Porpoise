@@ -63,11 +63,13 @@ var Style = {
         },
         contentStates: {
             normal: {
-                color: "#676664",
+                highlight: "#676664",
+                color: "#A4A3A1",
                 duration: 150
             },
             hover: {
-                color: "#E05B3C",
+                highlight: "#E05B3C",
+                color: "#E79685",
                 duration: 150
             }
         },
@@ -79,11 +81,15 @@ var Style = {
         // The color specifics based on state
         ItemStates: {
             normal: {
-                color: "transparent"
+                color: "transparent",
+                imageBorderColor: "#EFE9EB",
+                imageBackground: "#FFFEFF"
             },
             hover: {
                 color: "#F9EBE8",
-                borderColor: "#F0E2DF"
+                borderColor: "#F0E2DF",
+                imageBorderColor: "#F0E2DF",
+                imageBackground: "#FFFCFD"
             }
         }
     }

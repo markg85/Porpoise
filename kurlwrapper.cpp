@@ -38,7 +38,7 @@ void KUrlWrapper::setUrl(const QString &url)
 
 void KUrlWrapper::append(QString entry)
 {
-    m_pathModel->setData(m_pathModel->index(rowCount()- 1), entry);
+    m_pathModel->setData(m_pathModel->index(rowCount() - 1), entry);
     updateUrlPath();
 }
 

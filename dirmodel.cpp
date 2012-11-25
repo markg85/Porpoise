@@ -19,9 +19,11 @@
 
 #include "dirmodel.h"
 
+#include <QFileInfo>
+#include <QVariant>
 #include <KDirLister>
 #include <KDebug>
-#include <KIO/PreviewJob>
+
 #include <KImageCache>
 
 
@@ -53,17 +55,16 @@ DirModel::DirModel(QObject *parent)
     roleNames[KDirModel::ColumnCount]   = "ColumnCount";
     roleNames[UrlRole]                  = "Url";
     roleNames[MimeTypeRole]             = "MimeType";
-    roleNames[Thumbnail]                = "thumbnail";
+    roleNames[MimeComment]              = "MimeComment";
+    roleNames[Thumbnail]                = "Thumbnail";
     roleNames[IconName]                 = "IconName";
+    roleNames[BaseName]                 = "BaseName";
+    roleNames[Extension]                = "Extension";
+    roleNames[TimeString]               = "TimeString";
     setRoleNames(roleNames);
 
-    m_previewTimer = new QTimer(this);
-    m_previewTimer->setSingleShot(true);
-    connect(m_previewTimer, SIGNAL(timeout()),
-            this, SLOT(delayedPreview()));
-
     //using the same cache of the engine, they index both by url
-    m_imageCache = new KImageCache("plasma_engine_preview", 10485760);
+    m_imageCache = new KImageCache("porpoise_thumbnail_cache_2", 10485760);
 
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SIGNAL(countChanged()));
@@ -71,10 +72,16 @@ DirModel::DirModel(QObject *parent)
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
+    connect(dirLister(), SIGNAL(newItems(KFileItemList)), this, SLOT(newItems(KFileItemList)));
 }
 
 DirModel::~DirModel()
 {
+}
+
+int DirModel::columnCount(const QModelIndex &) const
+{
+    return ColumnCount;
 }
 
 QString DirModel::url() const
@@ -84,11 +91,12 @@ QString DirModel::url() const
 
 void DirModel::setUrl(const QString& url)
 {
-    if (url.isEmpty()) {
+    KUrl incUrl(url);
+    incUrl.adjustPath(KUrl::RemoveTrailingSlash);
+    if (incUrl.isEmpty()) {
         return;
     }
-    if (dirLister()->url().path() == url) {
-        dirLister()->updateDirectory(url);
+    if (dirLister()->url() == incUrl) {
         return;
     }
 
@@ -135,6 +143,18 @@ void DirModel::run(int i) const
     item.run();
 }
 
+void DirModel::rebuildUrlToIndex()
+{
+    m_urlToIndex.clear();
+
+    const int rows = rowCount();
+    for(int i = 0; i < rows; ++i) {
+        QModelIndex modelIndex = index(i, KDirModel::Name);
+        KFileItem item = KDirModel::itemForIndex(modelIndex);
+        m_urlToIndex.insert(item.url(), modelIndex);
+    }
+}
+
 QVariant DirModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -150,73 +170,82 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         KFileItem item = KDirModel::itemForIndex(index);
         return item.mimetype();
     }
+    case MimeComment: {
+        KFileItem item = KDirModel::itemForIndex(index);
+        return item.mimeComment();
+    }
     case IconName: {
         KFileItem item = KDirModel::itemForIndex(index);
         return item.iconName();
     }
-    case Thumbnail: {
+    case TimeString: {
         KFileItem item = KDirModel::itemForIndex(index);
-        QImage preview = QImage(m_screenshotSize, QImage::Format_ARGB32_Premultiplied);
+        return item.timeString();
+    }
+    case BaseName: {
+        KFileItem item = KDirModel::itemForIndex(index);
+        if(item.isFile()) {
+            QFileInfo fi(item.name());
+            return fi.baseName();
+        }
+        return item.name();
+    }
+    case Extension: {
+        KFileItem item = KDirModel::itemForIndex(index);
+        if(item.isFile()) {
+            QFileInfo fi(item.name());
+            return "." + fi.suffix();
+        }
+        return QString();
+    }
+    case Qt::DecorationRole: {
+        KFileItem item = KDirModel::itemForIndex(index);
 
-        if (m_imageCache->findImage(item.url().prettyUrl(), &preview)) {
+        QPixmap preview = QPixmap(m_screenshotSize);
+
+        if (m_imageCache->findPixmap(item.url().prettyUrl(), &preview)) {
             return preview;
+        } else {
+            return item.iconName();
         }
 
-        m_previewTimer->start(100);
-        const_cast<DirModel *>(this)->m_filesToPreview[item.url()] = QPersistentModelIndex(index);
     }
     default:
         return KDirModel::data(index, role);
     }
 }
 
-void DirModel::delayedPreview()
+void DirModel::updatePreview(const KFileItem &item, const QPixmap &preview)
 {
-    QHash<KUrl, QPersistentModelIndex>::const_iterator i = m_filesToPreview.constBegin();
-
-    KFileItemList list;
-
-    while (i != m_filesToPreview.constEnd()) {
-        KUrl file = i.key();
-        QPersistentModelIndex index = i.value();
-
-
-        if (!m_previewJobs.contains(file) && file.isValid()) {
-            list.append(KFileItem(file, QString(), 0));
-            m_previewJobs.insert(file, QPersistentModelIndex(index));
-        }
-
-        ++i;
-    }
-
-    if (list.size() > 0) {
-        KIO::PreviewJob* job = KIO::filePreview(list, m_screenshotSize);
-        job->setIgnoreMaximumSize(true);
-        kDebug() << "Created job" << job;
-        connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)),
-                this, SLOT(showPreview(KFileItem,QPixmap)));
-        connect(job, SIGNAL(failed(KFileItem)),
-                this, SLOT(previewFailed(KFileItem)));
-    }
-
-    m_filesToPreview.clear();
-}
-
-void DirModel::showPreview(const KFileItem &item, const QPixmap &preview)
-{
-    QPersistentModelIndex index = m_previewJobs.value(item.url());
-    m_previewJobs.remove(item.url());
+    QPersistentModelIndex index = m_urlToIndex.value(item.url());
 
     if (!index.isValid()) {
         return;
     }
 
-    m_imageCache->insertImage(item.url().prettyUrl(), preview.toImage());
-    //kDebug() << "preview size:" << preview.size();
-    emit dataChanged(index, index);
+    m_imageCache->insertPixmap(item.url().prettyUrl(), preview);
+    setData(index, preview, Qt::DecorationRole);
 }
 
-void DirModel::previewFailed(const KFileItem &item)
+void DirModel::previewFailed(const KFileItem &)
 {
-    m_previewJobs.remove(item.url());
+}
+
+
+void DirModel::newItems(const KFileItemList &list)
+{
+    rebuildUrlToIndex();
+    KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(180, 120));
+
+    job->setIgnoreMaximumSize(true);
+
+    qDebug() << "Created job" << job;
+    QObject::connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), this, SLOT(updatePreview(KFileItem,QPixmap)));
+    QObject::connect(job, SIGNAL(failed(KFileItem)), this, SLOT(previewFailed(KFileItem)));
+    QObject::connect(job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)));
+}
+
+void DirModel::result(KJob *)
+{
+    qDebug() << "Result....";
 }

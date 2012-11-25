@@ -8,12 +8,16 @@ Rectangle {
         url: urlWrapper.url
     }
 
-    state: "icon"
+    state: "list"
 
     states: [
         State {
             name: "icon"
             PropertyChanges { target: viewContainer; source: "views/IconView.qml" }
+        },
+        State {
+            name: "list"
+            PropertyChanges { target: viewContainer; source: "views/LView.qml" }
         },
         State {
             name: "tree"

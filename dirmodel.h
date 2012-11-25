@@ -23,6 +23,7 @@
 #include <KDirModel>
 #include "fileitem.h"
 #include <QVariant>
+#include <KIO/PreviewJob>
 
 class QTimer;
 
@@ -52,12 +53,18 @@ public:
     enum Roles {
         UrlRole = Qt::UserRole + 1,
         MimeTypeRole,
+        MimeComment,
         Thumbnail,
-        IconName
+        IconName,
+        BaseName,
+        Extension,
+        TimeString,
+        ColumnCount
     };
 
     DirModel(QObject* parent=0);
     virtual ~DirModel();
+    virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
 
     void setUrl(const QString& url);
     QString url() const;
@@ -71,10 +78,13 @@ public:
     Q_INVOKABLE QObject* itemForIndex(int index) const;
     Q_INVOKABLE void run(int index) const;
 
+    void rebuildUrlToIndex();
+
 protected Q_SLOTS:
-    void showPreview(const KFileItem &item, const QPixmap &preview);
+    void updatePreview(const KFileItem &item, const QPixmap &preview);
     void previewFailed(const KFileItem &item);
-    void delayedPreview();
+    void newItems(const KFileItemList& list);
+    void result(KJob*);
 
 Q_SIGNALS:
     void countChanged();
@@ -87,7 +97,7 @@ private:
     QTimer *m_previewTimer;
     QHash<KUrl, QPersistentModelIndex> m_filesToPreview;
     QSize m_screenshotSize;
-    QHash<KUrl, QPersistentModelIndex> m_previewJobs;
+    QHash<KUrl, QPersistentModelIndex> m_urlToIndex;
     KImageCache* m_imageCache;
 };
 
