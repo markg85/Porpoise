@@ -43,6 +43,8 @@ class DirModel : public KDirModel
      * @property string The url we want to browse. it may be an absolute path or a correct url of any protocol KIO supports
      */
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(int thumbWidth READ thumbWidth WRITE setThumbWidth NOTIFY thumbWidthChanged)
+    Q_PROPERTY(int thumbHeight READ thumbHeight WRITE setThumbHeight NOTIFY thumbHeightChanged)
 
     /**
      * @property count Total number of rows
@@ -69,6 +71,12 @@ public:
     void setUrl(const QString& url);
     QString url() const;
 
+    void setThumbWidth(int thumbWidth);
+    int thumbWidth() { return m_thumbWidth; }
+
+    void setThumbHeight(int thumbHeight);
+    int thumbHeight() { return m_thumbHeight; }
+
     QVariant data(const QModelIndex &index, int role) const;
     int count() const {return rowCount();}
 
@@ -89,6 +97,8 @@ protected Q_SLOTS:
 Q_SIGNALS:
     void countChanged();
     void urlChanged();
+    void thumbWidthChanged();
+    void thumbHeightChanged();
 
 private:
     QStringList m_mimeTypes;
@@ -96,9 +106,10 @@ private:
     //previews
     QTimer *m_previewTimer;
     QHash<KUrl, QPersistentModelIndex> m_filesToPreview;
-    QSize m_screenshotSize;
     QHash<KUrl, QPersistentModelIndex> m_urlToIndex;
     KImageCache* m_imageCache;
+    int m_thumbWidth;
+    int m_thumbHeight;
 };
 
 #endif // DIRMODEL_H

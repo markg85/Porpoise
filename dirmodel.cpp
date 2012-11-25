@@ -28,8 +28,10 @@
 
 
 DirModel::DirModel(QObject *parent)
-    : KDirModel(parent),
-      m_screenshotSize(180, 120)
+    : KDirModel(parent)
+    , m_thumbWidth(128)
+    , m_thumbHeight(128)
+
 {
     KMimeType::List mimeList = KMimeType::allMimeTypes();
 
@@ -87,6 +89,24 @@ int DirModel::columnCount(const QModelIndex &) const
 QString DirModel::url() const
 {
     return dirLister()->url().prettyUrl();
+}
+
+void DirModel::setThumbWidth(int thumbWidth)
+{
+    if(thumbWidth == m_thumbWidth) {
+        return;
+    }
+    m_thumbWidth = thumbWidth;
+    emit thumbWidthChanged();
+}
+
+void DirModel::setThumbHeight(int thumbHeight)
+{
+    if(thumbHeight == m_thumbHeight) {
+        return;
+    }
+    m_thumbHeight = thumbHeight;
+    emit thumbHeightChanged();
 }
 
 void DirModel::setUrl(const QString& url)
@@ -201,7 +221,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole: {
         KFileItem item = KDirModel::itemForIndex(index);
 
-        QPixmap preview = QPixmap(m_screenshotSize);
+        QPixmap preview;
 
         if (m_imageCache->findPixmap(item.url().prettyUrl(), &preview)) {
             return preview;
@@ -235,7 +255,7 @@ void DirModel::previewFailed(const KFileItem &)
 void DirModel::newItems(const KFileItemList &list)
 {
     rebuildUrlToIndex();
-    KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(180, 120));
+    KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(thumbWidth(), thumbHeight()));
 
     job->setIgnoreMaximumSize(true);
 
