@@ -1,8 +1,6 @@
 import QtQuick 1.1
 
-Rectangle {
-
-    color: "transparent"
+Item {
 
     // This timer fires to update the url path model _after_ the animations have been run.
     Timer {
@@ -41,13 +39,6 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-            parent.color = "red"
-        }
-        onExited: {
-            parent.color = "transparent"
-        }
         onClicked: {
             bcBar.state = "edit"
         }

@@ -9,7 +9,6 @@ Item {
     Row {
         id: header
         width: parent.width - 10
-        height: 30
         spacing: 5
 
         Text {
@@ -19,6 +18,7 @@ Item {
             font.italic: true
             font.bold: true
             text: dirModel.count + " items"
+            color: JsUtil.Theme.ViewContainer.HeaderNames.normal.color
         }
 
         Text {
@@ -28,6 +28,7 @@ Item {
             font.italic: true
             font.bold: true
             text: "date"
+            color: JsUtil.Theme.ViewContainer.HeaderNames.normal.color
         }
 
         Text {
@@ -37,9 +38,30 @@ Item {
             font.italic: true
             font.bold: true
             text: "type"
+            color: JsUtil.Theme.ViewContainer.HeaderNames.normal.color
         }
     }
+    Item {
+        anchors.top: header.bottom
+        id: spacing
+        height: 5
+        width: 1
+    }
 
+    Rectangle {
+        id: divLine
+        anchors.top: spacing.bottom
+        width: parent.width
+        height: 1
+        color: JsUtil.Theme.Application.divider.color
+    }
+
+    Item {
+        anchors.top: divLine.bottom
+        id: spacingTwo
+        height: 1
+        width: 1
+    }
     Component {
         id: listDelegate
         Item {
@@ -112,9 +134,16 @@ Item {
                             icon: decoration
                         }
                     }
+                    /**
+                     *  Note: The Flow below is required to put the filename + extension on one line.
+                     *  And that is done in two separate elements because both have a different style.
+                     *  The downside here is eliding. It's not working because it are two elements.
+                     *  I tried using the HTML eliding way by puttin both text in one html string,
+                     *  but that seems to present some issues in terms of width.
+                     */
                     Flow {
                         anchors.verticalCenter: parent.verticalCenter
-                        width: items.width - imageIcon.width
+                        width: items.width - imageIcon.width - 10 // that 10 is for 2x spacing
                         Text {
                             id: content
                             color: JsUtil.Theme.ViewContainer.ContentStates.normal.highlight
@@ -154,7 +183,7 @@ Item {
         id: list
         clip: true
         width: parent.width
-        anchors.top: header.bottom
+        anchors.top: spacingTwo.bottom
         anchors.bottom: parent.bottom
         model: dirModel
         cacheBuffer: 100

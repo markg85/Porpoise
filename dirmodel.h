@@ -85,6 +85,7 @@ public:
     Q_INVOKABLE QVariantMap get(int index) const;
     Q_INVOKABLE QObject* itemForIndex(int index) const;
     Q_INVOKABLE void run(int index) const;
+    Q_INVOKABLE void reload();
 
     void rebuildUrlToIndex();
 

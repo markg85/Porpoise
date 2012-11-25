@@ -163,6 +163,15 @@ void DirModel::run(int i) const
     item.run();
 }
 
+void DirModel::reload()
+{
+    beginResetModel();
+    //dirLister()->openUrl(dirLister()->url(), KDirLister::OpenUrlFlags::Reload); // Doesn't work for some reason -_-
+    dirLister()->openUrl(dirLister()->url());
+    endResetModel();
+    emit urlChanged();
+}
+
 void DirModel::rebuildUrlToIndex()
 {
     m_urlToIndex.clear();

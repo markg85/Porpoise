@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     kcompletionwrapper.cpp \
     testclass.cpp \
     dirmodel.cpp \
-    kgraphicsitem.cpp
+    kgraphicsitem.cpp \
+    kurlundoredo.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -54,7 +55,8 @@ HEADERS += \
     testclass.h \
     dirmodel.h \
     fileitem.h \
-    kgraphicsitem.h
+    kgraphicsitem.h \
+    kurlundoredo.h
 
 OTHER_FILES += \
     qml/Porpoise/colorstyles/porpoise.js

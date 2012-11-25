@@ -1,7 +1,13 @@
 import QtQuick 1.1
 import Porpoise 0.1
 
-Rectangle {
+Item {
+
+    signal reload()
+
+    onReload: {
+        dirModel.reload()
+    }
 
     DirModel {
         id: dirModel

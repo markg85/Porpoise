@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "javascript/util.js" as JsUtil
 
 Item {
     id: bcButton
@@ -15,7 +16,7 @@ Item {
 
     // Used for calculationg the width of this button. This included the ">" arrow.
     property int additionalTextMargin: 5 // left and right
-    property int arrawRectHeightAndWidth: height // The height is also the width
+    property int arrawRectHeightAndWidth: 10 // The height is also the width
     property int textRectWidth: buttonText.width + (additionalTextMargin * 2)
 
     function removeElement(iAnimationTime, iPrePauseTime) {
@@ -35,11 +36,10 @@ Item {
         }
     }
 
-    Rectangle {
+    Item {
         id: textRect
         width: textRectWidth + ((lastItem) ? 0 : arrawRectHeightAndWidth)
         height: bcButton.height
-        color: "orange"
 
         Item {
             width: textRectWidth
@@ -47,11 +47,20 @@ Item {
             Text {
                 id: buttonText
                 anchors.centerIn: parent
-                text: index + " - " + modelData
+                text: modelData
                 font.bold: bcButton.lastItem
+                color: {
+                    if(bcButton.lastItem) {
+                        return JsUtil.Theme.BreadCrumb.fontColorActive.normal
+                    } else {
+                        return JsUtil.Theme.BreadCrumb.fontColorInactive.normal
+                    }
+                }
+
 
                 MouseArea {
                     anchors.fill: parent
+                    hoverEnabled: true
                     onClicked: {
                         bcButton.lastItem = true
                         repeaterElement.parent.breadcrumbButtonPressed(index)
@@ -60,6 +69,20 @@ Item {
                         }
 
                         console.log("BreadcrumbButton Clicked")
+                    }
+                    onEntered: {
+                        if(bcButton.lastItem) {
+                            buttonText.color = JsUtil.Theme.BreadCrumb.fontColorActive.hover
+                        } else {
+                            buttonText.color = JsUtil.Theme.BreadCrumb.fontColorInactive.hover
+                        }
+                    }
+                    onExited: {
+                        if(bcButton.lastItem) {
+                            buttonText.color = JsUtil.Theme.BreadCrumb.fontColorActive.normal
+                        } else {
+                            buttonText.color = JsUtil.Theme.BreadCrumb.fontColorInactive.normal
+                        }
                     }
                 }
             }
@@ -76,7 +99,7 @@ Item {
             }
 
             anchors.right: textRect.right
-            height: arrawRectHeightAndWidth
+            height: bcButton.height
             width: arrawRectHeightAndWidth
             visible: !lastItem
         }

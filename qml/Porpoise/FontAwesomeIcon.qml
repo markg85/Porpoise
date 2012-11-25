@@ -1,12 +1,19 @@
 import QtQuick 1.1
-import "javascript/fontawesome.js" as FontAwesome
+import "javascript/util.js" as JsUtil
 
 
-Rectangle {
+Item {
     id: faRoot
-    color: "transparent"
     property alias font: faIcon.font
     property string iconName: ""
+    property color normalColor: "purple" // Purple, just so you know that you didn't set a color using normalColor and hoverColor.
+    property color hoverColor: faIcon.color
+
+    onNormalColorChanged: {
+        faIcon.color = normalColor
+    }
+
+    signal clicked()
 
     states: [
         State {
@@ -43,7 +50,9 @@ Rectangle {
                 anchors.centerIn: parent
                 id: faIcon
                 text: faRoot.iconName
+                color: faRoot.normalColor
                 font.family: "FontAwesome"
+                font.pointSize: 15 // 15 seems like a nice default
             }
             Text {
                 smooth: true
@@ -61,11 +70,17 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
-            faRoot.state = "pressed"
+            faRoot.clicked()
+//            faRoot.state = "pressed"
+        }
+
+        onEntered: {
+            faIcon.color = faRoot.hoverColor
         }
 
         onExited: {
-            faRoot.state = "normal"
+            faIcon.color = faRoot.normalColor
+//            faRoot.state = "normal"
         }
     }
 }

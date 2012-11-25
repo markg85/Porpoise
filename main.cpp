@@ -7,6 +7,7 @@
 #include "kcompletionwrapper.h"
 #include "dirmodel.h"
 #include "kgraphicsitem.h"
+#include "kurlundoredo.h"
 #include "util.h"
 #include "testclass.h"
 
@@ -22,6 +23,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<KCompletionWrapper>("Porpoise", 0, 1, "KCompletionWrapper");
     qmlRegisterType<DirModel>("Porpoise", 0, 1, "DirModel");
     qmlRegisterType<KGraphicsItem>("Porpoise", 0, 1, "KGraphicsItem");
+    qmlRegisterType<KUrlUndoRedo>("Porpoise", 0, 1, "KUrlUndoRedo");
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();

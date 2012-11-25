@@ -13,6 +13,10 @@ var Style = {
         font: {
             color: "#545351"
         },
+        divider: {
+            color: "#E5E4E2"
+        },
+
         animationDuration: 150
     },
     BreadCrumb: {
@@ -25,13 +29,13 @@ var Style = {
         },
         // All crumbs but the last one are drawn in this color
         fontColorInactive: {
-            normal: "#545351",
-            hover: "#545351"
+            normal: "#A4A3A1",
+            hover: "#E79685"
         },
         // The last crumb (without and ">") is drawn in this color
         fontColorActive: {
-            normal: "#545351",
-            hover: "#545351"
+            normal: "#676664",
+            hover: "#E05B3C"
         },
         iconColor: {
             normal: "#C4C3C1",
@@ -50,8 +54,9 @@ var Style = {
     },
     // These are the buttons before and after the breadcrumb
     ToolButtons: {
-        normal: "#C4C3C1",
-        hover: "#C4C3C1",
+        normal: "#676664",
+        hover: "#E05B3C",
+        disabledColor: "#A4A3A1",
         pointSize: 15
     },
     // These settings are all ements inside a view container. This could be the icon view, list view, tree view. All of them.
@@ -71,6 +76,14 @@ var Style = {
                 highlight: "#E05B3C",
                 color: "#E79685",
                 duration: 150
+            }
+        },
+        HeaderNames: {
+            normal: {
+                color: "#676664",
+            },
+            hover: {
+                color: "#E05B3C",
             }
         },
         // The default item settings excluding clolors.
