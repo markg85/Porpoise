@@ -1,0 +1,65 @@
+Currently Porpoise doesn't have a set directory structure. Thus far i have been able to manage just fine with that.
+However, when trying to make things as dynamic as possible i hit some issues that really need a predefined 
+directory structure as a set of rules to obey.
+
+The issues i'm trying to solva are:
+1. Views must be dynamic. A user should just be able to make a new view, add it to a folder (and a config file) 
+and that should be it. It must be as easy as possible. In the QML side when switching between views i want to 
+generate the list of views and the state array that belongs with it.
+
+2. Panels have the same "issue" as views. The difference is that multiple panels can be active whereas views can 
+only have one (in one ViewContainer, there can be multiple view containers).
+
+The structure as i envision it at this moment:
+
+| qml/
+| - Poipoise/
+| - - Plugins/
+| - - - Views/
+| - - - - IconView/
+| - - - - - IconView.qml
+| - - - - - view.ini
+| - - - - ListView/
+| - - - - - ListView.qml
+| - - - - - view.ini
+| - - - - TreeView/
+| - - - - - TreeView.qml
+| - - - - - view.ini
+| - - - - ...
+| - - - Panels/
+| - - - - Places/
+| - - - - - Places.qml
+| - - - - - panel.ini
+| - - - - ...
+| - - - Styles/
+| - - - - Poipoise/
+| - - - - - style.js
+| - - - - ...
+| main.cpp
+| other cpp/h files
+
+- view.ini
+The view.ini file should look somewhat like this:
+[IconView]
+name = iv // This name will be used in the state
+icon = IconThLarge // Names should match those that are set in fontawesome.js
+file = IconView.qml // This will be the "main" for the plugin.
+
+Those 4 values including the groupname "[IconView]" are mandantory!
+For a Panel plugin the ini file (panel.ini) looks the same. Here is an example anyway.
+[Places]
+name = Places // This name will be used in the state
+icon = StarEmpty // (not mandantory in a places plugin. If no icon name is provided then CheckEmpty will be shown.
+file = Places.qml // This will be the "main" for the plugin.
+
+Last there is the styles folder. That folder is simpler then other plugins. It contains a sub folder with your
+style name. In this case "Porpoise" and within that folder a style.js file in which you define the colors.
+
+Now this is obviously going to be extended for all plugin types since right now there is now way to provide:
+- Author
+- Email
+- Description
+- License
+- ...
+
+And a bunch of other things. For now the above definition will do.

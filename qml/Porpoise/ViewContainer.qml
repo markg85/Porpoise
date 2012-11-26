@@ -22,6 +22,13 @@ Item {
 
     state: "list"
 
+    /**
+      In the most ideal situation this list should also be build up dynamically. Either based on a config file or by reading the folder that contains the views.
+      I guess a config file would be best. in that case it should have at least the following per view:
+      - Name (icon, list, tree, ...)
+      - Icon (the FontAwesome icon to use for the view
+      - File (IconView.qml for icon ... you get the point)
+     */
     states: [
         State {
             name: "icon"
