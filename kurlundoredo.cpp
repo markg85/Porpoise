@@ -3,11 +3,7 @@
 
 KUrlUndoRedo::KUrlUndoRedo(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
-    , m_urls(0)
 {
-    // Right... Very odd! Somehow the first element gets inserted and is "".. I'm not inserting that one!
-    // I'm betting this one will cause issues later on..
-    m_urls.removeFirst();
 }
 
 void KUrlUndoRedo::addUrl(const QString &url)
