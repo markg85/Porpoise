@@ -44,22 +44,24 @@ Rectangle {
 
             // Change the back button if needed
             if(currentUrlIndex > 0) {
+                backButton.enableMouseEvents = true
                 backButton.normalColor = JsUtil.Theme.ToolButtons.normal
                 backButton.hoverColor = JsUtil.Theme.ToolButtons.hover
             } else {
+                backButton.enableMouseEvents = false
                 backButton.normalColor = JsUtil.Theme.ToolButtons.disabledColor
-                backButton.hoverColor = backButton.normalColor
             }
 
             console.log("JS: currentUrlIndex = " + currentUrlIndex + " count = " + (newCount + 1))
 
             // Change the forward button if needed
             if(currentUrlIndex < newCount ) {
+                forwardButton.enableMouseEvents = true
                 forwardButton.normalColor = JsUtil.Theme.ToolButtons.normal
                 forwardButton.hoverColor = JsUtil.Theme.ToolButtons.hover
             } else {
+                forwardButton.enableMouseEvents = false
                 forwardButton.normalColor = JsUtil.Theme.ToolButtons.disabledColor
-                forwardButton.hoverColor = forwardButton.normalColor
             }
         }
 

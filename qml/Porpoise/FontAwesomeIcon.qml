@@ -8,6 +8,7 @@ Item {
     property string iconName: ""
     property color normalColor: "purple" // Purple, just so you know that you didn't set a color using normalColor and hoverColor.
     property color hoverColor: faIcon.color
+    property bool enableMouseEvents: true
 
     onNormalColorChanged: {
         faIcon.color = normalColor
@@ -68,6 +69,7 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        enabled: faRoot.enableMouseEvents
         hoverEnabled: true
         onClicked: {
             faRoot.clicked()
