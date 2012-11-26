@@ -39,32 +39,6 @@ Rectangle {
     KUrlUndoRedo {
         id: undoRedo
 
-        onCountChanged: {
-            var newCount = count - 1;
-
-            // Change the back button if needed
-            if(currentUrlIndex > 0) {
-                backButton.enableMouseEvents = true
-                backButton.normalColor = JsUtil.Theme.ToolButtons.normal
-                backButton.hoverColor = JsUtil.Theme.ToolButtons.hover
-            } else {
-                backButton.enableMouseEvents = false
-                backButton.normalColor = JsUtil.Theme.ToolButtons.disabledColor
-            }
-
-            console.log("JS: currentUrlIndex = " + currentUrlIndex + " count = " + (newCount + 1))
-
-            // Change the forward button if needed
-            if(currentUrlIndex < newCount ) {
-                forwardButton.enableMouseEvents = true
-                forwardButton.normalColor = JsUtil.Theme.ToolButtons.normal
-                forwardButton.hoverColor = JsUtil.Theme.ToolButtons.hover
-            } else {
-                forwardButton.enableMouseEvents = false
-                forwardButton.normalColor = JsUtil.Theme.ToolButtons.disabledColor
-            }
-        }
-
         onCurrentUrlChanged: {
             console.log("JS: onCurrentUrlChanged to: " + currentUrl)
             urlWrapper.preventUndoRedoAdd = true
@@ -76,7 +50,7 @@ Rectangle {
 
     Item {
         id: head
-        height: 100
+        height: 75
         width: parent.width
         z: 2
 
@@ -97,36 +71,27 @@ Rectangle {
                         width: parent.width / 3
                         height: parent.height
                         iconName: JsUtil.FA.ChevronLeft
-                        normalColor: JsUtil.Theme.ToolButtons.disabledColor
+                        enableMouseEvents: (undoRedo.currentUrlIndex > 0)
 
                         onClicked: {
-                            // First go to the previous URL
                             undoRedo.previousUrl()
                         }
-
-//                        normalColor: JsUtil.Theme.ToolButtons.normal
-//                        hoverColor: JsUtil.Theme.ToolButtons.hover
                     }
                     FontAwesomeIcon {
                         id: forwardButton
                         width: parent.width / 3
                         height: parent.height
                         iconName: JsUtil.FA.ChevronRight
-                        normalColor: JsUtil.Theme.ToolButtons.disabledColor
+                        enableMouseEvents: (undoRedo.currentUrlIndex < (undoRedo.count - 1))
 
                         onClicked: {
                             undoRedo.nextUrl()
                         }
-
-//                        normalColor: JsUtil.Theme.ToolButtons.normal
-//                        hoverColor: JsUtil.Theme.ToolButtons.hover
                     }
                     FontAwesomeIcon {
                         width: parent.width / 3
                         height: parent.height
                         iconName: JsUtil.FA.Refresh
-                        normalColor: JsUtil.Theme.ToolButtons.normal
-                        hoverColor: JsUtil.Theme.ToolButtons.hover
 
                         onClicked: {
                             viewContainer.reload()
@@ -150,15 +115,44 @@ Rectangle {
                 height: 30
                 anchors.right: parent.right
                 iconName: JsUtil.FA.Cog
-                normalColor: JsUtil.Theme.ToolButtons.normal
-                hoverColor: JsUtil.Theme.ToolButtons.hover
             }
+        }
+    }
+
+    Item {
+        id: leftContainer
+        anchors.left: parent.left
+        anchors.right: divederContainer.left
+        anchors.top: head.bottom
+        anchors.bottom: parent.bottom
+    }
+
+    Item {
+        id: divederContainer
+        width: 5
+        anchors.top: head.bottom
+        anchors.bottom: parent.bottom
+
+        x: JsUtil.Theme.LeftContainer.width
+
+        Rectangle {
+            width: 1
+            height: parent.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: JsUtil.Theme.Application.divider.color
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            drag.target: parent
+            drag.axis: Drag.XAxis
         }
     }
 
     ViewContainer {
         id: viewContainer
-        width: parent.width
+        anchors.left: divederContainer.right
+        anchors.right: parent.right
         anchors.top: head.bottom
         anchors.bottom: parent.bottom
         clip: true

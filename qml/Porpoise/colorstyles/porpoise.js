@@ -19,6 +19,9 @@ var Style = {
 
         animationDuration: 150
     },
+    LeftContainer: {
+        width: 175
+    },
     BreadCrumb: {
         background: {
             normal: "transparent",

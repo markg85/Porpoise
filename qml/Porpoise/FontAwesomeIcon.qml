@@ -6,13 +6,7 @@ Item {
     id: faRoot
     property alias font: faIcon.font
     property string iconName: ""
-    property color normalColor: "purple" // Purple, just so you know that you didn't set a color using normalColor and hoverColor.
-    property color hoverColor: faIcon.color
-    property bool enableMouseEvents: true
-
-    onNormalColorChanged: {
-        faIcon.color = normalColor
-    }
+    property alias enableMouseEvents: mouseEvents.visible
 
     signal clicked()
 
@@ -51,7 +45,7 @@ Item {
                 anchors.centerIn: parent
                 id: faIcon
                 text: faRoot.iconName
-                color: faRoot.normalColor
+                color: JsUtil.Theme.ToolButtons.normal
                 font.family: "FontAwesome"
                 font.pointSize: 15 // 15 seems like a nice default
             }
@@ -68,21 +62,29 @@ Item {
     }
 
     MouseArea {
+        id: mouseEvents
         anchors.fill: parent
-        enabled: faRoot.enableMouseEvents
+        enabled: true
         hoverEnabled: true
+
+        onVisibleChanged: {
+            if(!visible) {
+                faIcon.color = JsUtil.Theme.ToolButtons.disabledColor
+            } else {
+                faIcon.color = JsUtil.Theme.ToolButtons.normal
+            }
+        }
+
         onClicked: {
             faRoot.clicked()
-//            faRoot.state = "pressed"
         }
 
         onEntered: {
-            faIcon.color = faRoot.hoverColor
+            faIcon.color = JsUtil.Theme.ToolButtons.hover
         }
 
         onExited: {
-            faIcon.color = faRoot.normalColor
-//            faRoot.state = "normal"
+            faIcon.color = JsUtil.Theme.ToolButtons.normal
         }
     }
 }
