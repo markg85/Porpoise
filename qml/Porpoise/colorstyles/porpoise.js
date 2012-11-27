@@ -69,6 +69,10 @@ var Style = {
             visible: true,
             color: "red"
         },
+        Views: {
+            inactive: "#EDECEB",
+            active: "transparent"
+        },
         ContentStates: {
             normal: {
                 highlight: "#676664",

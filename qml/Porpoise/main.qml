@@ -27,12 +27,14 @@ Rectangle {
             if(!preventUndoRedoAdd) {
                 undoRedo.addUrl(url)
             }
+            splitView.activeViewContainer.updateUrl(url)
 
 
             console.log("*************** onUrlChanged: " + url)
         }
         Component.onCompleted: {
             undoRedo.addUrl(url)
+            splitView.initUrl = url
         }
     }
 
@@ -53,7 +55,6 @@ Rectangle {
         height: 75
         width: parent.width
         z: 2
-
 
         Item {
             width: parent.width
@@ -94,7 +95,7 @@ Rectangle {
                         iconName: JsUtil.FA.Refresh
 
                         onClicked: {
-                            viewContainer.reload()
+                            splitView.activeViewContainer.reload()
                         }
                     }
                 }
@@ -122,13 +123,13 @@ Rectangle {
     Item {
         id: leftContainer
         anchors.left: parent.left
-        anchors.right: divederContainer.left
+        anchors.right: dividerContainer.left
         anchors.top: head.bottom
         anchors.bottom: parent.bottom
     }
 
     Item {
-        id: divederContainer
+        id: dividerContainer
         width: 5
         anchors.top: head.bottom
         anchors.bottom: parent.bottom
@@ -149,13 +150,13 @@ Rectangle {
         }
     }
 
-    ViewContainer {
-        id: viewContainer
-        anchors.left: divederContainer.right
+    SplitView {
+        id: splitView
+        anchors.left: dividerContainer.right
         anchors.right: parent.right
         anchors.top: head.bottom
         anchors.bottom: parent.bottom
-        clip: true
-        z: 1
     }
+
+
 }

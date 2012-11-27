@@ -1,17 +1,27 @@
 import QtQuick 1.1
 import Porpoise 0.1
+import "javascript/util.js" as JsUtil
 
 Item {
 
     signal reload()
+    signal updateUrl(string externalUrl)
+    property string initUrl: ""
+    property bool activeView: true
+    property color viewBackgroundColor: (activeView) ? JsUtil.Theme.ViewContainer.Views.active : JsUtil.Theme.ViewContainer.Views.inactive
 
     onReload: {
         dirModel.reload()
     }
 
+    onUpdateUrl: {
+        dirModel.url = externalUrl
+    }
+
     DirModel {
         id: dirModel
-        url: urlWrapper.url
+        url: parent.initUrl
+
 
         // It's advised to set the tumbnail with and height to the max size that the thumbnail will ever be.
         // Then scale it down further in KGraphicsItem by setting the width and height in there to a smaller or equal size as the ones you set here.

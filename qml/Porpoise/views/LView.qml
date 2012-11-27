@@ -93,6 +93,7 @@ Item {
                     imageIcon.border.color = JsUtil.Theme.ViewContainer.ItemStates.normal.imageBorderColor
                 }
                 onClicked: {
+                    list.mouseEvent()
                     var currentFileItem = dirModel.itemForIndex(index)
                     if(currentFileItem.isDir) {
                         urlWrapper.url = dirModel.get(index).url
@@ -178,18 +179,36 @@ Item {
         }
     }
 
-    ListView {
-
-        id: list
-        clip: true
+    Rectangle {
+        id: focusColor
+        color: parent.parent.parent.viewBackgroundColor
         width: parent.width
         anchors.top: spacingTwo.bottom
         anchors.bottom: parent.bottom
-        model: dirModel
-        cacheBuffer: 100
-        spacing: 5
-        boundsBehavior: Flickable.StopAtBounds
 
-        delegate: listDelegate
+        ListView {
+
+            signal mouseEvent()
+
+            id: list
+            clip: true
+            anchors.fill: parent
+            model: dirModel
+            cacheBuffer: 100
+            spacing: 5
+            boundsBehavior: Flickable.StopAtBounds
+
+            onMouseEvent: {
+                parent.parent.parent.parent.activeView = true
+            }
+
+            onContentYChanged: {
+                // toooo much parent....
+                parent.parent.parent.parent.activeView = true
+            }
+
+            delegate: listDelegate
+        }
     }
+
 }
