@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     testclass.cpp \
     dirmodel.cpp \
     kgraphicsitem.cpp \
-    kurlundoredo.cpp
+    kurlundoredo.cpp \
+    shortcut.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -56,7 +57,8 @@ HEADERS += \
     dirmodel.h \
     fileitem.h \
     kgraphicsitem.h \
-    kurlundoredo.h
+    kurlundoredo.h \
+    shortcut.h
 
 OTHER_FILES += \
     qml/Porpoise/colorstyles/porpoise.js

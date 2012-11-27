@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QMutex>
+#include <QWidget>
 #include "pathmodel.h"
 
 
@@ -42,6 +43,8 @@ public:
     PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE QString testString() { return m_test; }
     Q_INVOKABLE QString testSearchString();
+    QWidget* mainWindow() { return m_mainWindow; }
+    void setMainWindow(QWidget* mainWindow) { m_mainWindow = mainWindow; }
 
 
 
@@ -61,6 +64,7 @@ private:
 
     QString m_test;
     PathModel* m_pathModel;
+    QWidget* m_mainWindow;
     
 };
 

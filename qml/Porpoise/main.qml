@@ -9,6 +9,9 @@ Rectangle {
     height: 600
     color: JsUtil.Theme.Application.background.color
 
+    // Only ever include this line ONCE throughout the application!
+    AppShortcuts{}
+
     // Load the "FontAwesome" font for the monochrome icons.
     FontLoader {
         source: "fonts/fontawesome-webfont.ttf"
