@@ -53,6 +53,7 @@ Item {
         anchors.right: parent.right
         height: parent.height
         initUrl: parent.initUrl
+        enabled: parent.splitView
         clip: true
         activeView: false // There can only be one view active at any given time.
 

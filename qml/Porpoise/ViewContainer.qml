@@ -18,10 +18,14 @@ Item {
         dirModel.url = externalUrl
     }
 
+    onInitUrlChanged: {
+        if(enabled) {
+            dirModel.url = initUrl
+        }
+    }
+
     DirModel {
         id: dirModel
-        url: parent.initUrl
-
 
         // It's advised to set the tumbnail with and height to the max size that the thumbnail will ever be.
         // Then scale it down further in KGraphicsItem by setting the width and height in there to a smaller or equal size as the ones you set here.
