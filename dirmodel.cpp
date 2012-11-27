@@ -166,8 +166,7 @@ void DirModel::run(int i) const
 void DirModel::reload()
 {
     beginResetModel();
-    //dirLister()->openUrl(dirLister()->url(), KDirLister::OpenUrlFlags::Reload); // Doesn't work for some reason -_-
-    dirLister()->openUrl(dirLister()->url());
+    dirLister()->openUrl(dirLister()->url(), KDirLister::Reload);
     endResetModel();
     emit urlChanged();
 }
