@@ -38,7 +38,7 @@ void KGraphicsItem::setIcon(const QVariant &icon)
     QDeclarativeItem::setImplicitHeight(imageSize.height());
     QDeclarativeItem::setImplicitWidth(imageSize.width());
 
-    // Calculate offsets. They (one or both) or > 0 if the source image is smaller then the rectangle in which they are painted.
+    // Calculate offsets. These offsets will be used to paint the pixmap in the center of this item.
     m_xOffset = (width() - m_pixmap.width()) / 2;
     m_yOffset = (height() - m_pixmap.height()) / 2;
 
