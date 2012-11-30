@@ -30,9 +30,6 @@ public:
     KGraphicsItem::State state() const;
     void setState(State state);
 
-    int implicitWidth() const;
-    int implicitHeight() const;
-
     void setSmooth(const bool smooth);
     bool smooth() const;
 
@@ -46,6 +43,8 @@ private:
     bool m_smooth;
     State m_state;
     QPixmap m_pixmap;
+    int m_xOffset;
+    int m_yOffset;
 };
 
 #endif // KGRAPHICSITEM_H
