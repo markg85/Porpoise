@@ -55,7 +55,6 @@ public:
     enum Roles {
         UrlRole = Qt::UserRole + 1,
         MimeTypeRole,
-        MimeComment,
         Thumbnail,
         IconName,
         BaseName,

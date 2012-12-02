@@ -53,11 +53,10 @@ DirModel::DirModel(QObject *parent)
     roleNames[KDirModel::Permissions]   = "Permissions";
     roleNames[KDirModel::Owner]         = "Owner";
     roleNames[KDirModel::Group]         = "Group";
-    roleNames[KDirModel::Type]          = "Type";
+    roleNames[KDirModel::Type]          = "Type"; // Type == item.mimeComment() ... yeah, go figure that one out.
     roleNames[KDirModel::ColumnCount]   = "ColumnCount";
     roleNames[UrlRole]                  = "Url";
     roleNames[MimeTypeRole]             = "MimeType";
-    roleNames[MimeComment]              = "MimeComment";
     roleNames[Thumbnail]                = "Thumbnail";
     roleNames[IconName]                 = "IconName";
     roleNames[BaseName]                 = "BaseName";
@@ -189,7 +188,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    switch (role) {
+    switch (role){
     case UrlRole: {
         KFileItem item = KDirModel::itemForIndex(index);
         return item.url().prettyUrl();
@@ -197,10 +196,6 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
     case MimeTypeRole: {
         KFileItem item = KDirModel::itemForIndex(index);
         return item.mimetype();
-    }
-    case MimeComment: {
-        KFileItem item = KDirModel::itemForIndex(index);
-        return item.mimeComment();
     }
     case IconName: {
         KFileItem item = KDirModel::itemForIndex(index);
@@ -238,8 +233,11 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         }
 
     }
-    default:
-        return KDirModel::data(index, role);
+    default: {
+        // Use the role as "column", then KDirModel will work with it's data(...) function.
+        QModelIndex customIndex = KDirModel::index(index.row(), role);
+        return KDirModel::data(customIndex, Qt::DisplayRole);
+    }
     }
 }
 
