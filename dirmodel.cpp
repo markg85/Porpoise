@@ -45,6 +45,9 @@ DirModel::DirModel(QObject *parent)
     //TODO: configurable mime filter
     //dirLister()->setMimeFilter(m_mimeTypes);
 
+    // Delayed mime detection
+    dirLister()->setDelayedMimeTypes(true);
+
     QHash<int, QByteArray>roleNames;
     roleNames[Qt::DecorationRole] = "decoration";
     roleNames[KDirModel::Name]          = "Name";
