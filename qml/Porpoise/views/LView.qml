@@ -171,7 +171,7 @@ Item {
                         width: type.width
                         anchors.verticalCenter: parent.verticalCenter
                         color: JsUtil.Theme.ViewContainer.ContentStates.normal.color
-                        text: MimeComment
+                        text: Type
                         elide: Text.ElideRight
                     }
                 }
