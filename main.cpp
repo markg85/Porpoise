@@ -19,10 +19,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QScopedPointer<QApplication> app(createApplication(argc, argv));
 
     QmlApplicationViewer viewer;
-    Util::instance()->setMainWindow(&viewer); // required for "clean" app wide shortcuts.
-
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-    viewer.rootContext()->setContextProperty("Util", Util::instance());
 
     qmlRegisterType<KUrlWrapper>("Porpoise", 0, 1, "KUrlWrapper");
     qmlRegisterType<KCompletionWrapper>("Porpoise", 0, 1, "KCompletionWrapper");
@@ -43,6 +40,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 //    test.folderThumbnails("/home/mark/Images/");
 //    test.fetchFolder("/home/mark/massive_files/");
 //    test.fetchFolder("/home/mark/lesser_massive");
+//    test.fetchFolder("ftp://ftp.mirror.aarnet.edu.au/pub/archlinux/extra/os/x86_64/");
 
 //    qDebug() << "-- START";
 //    DirModel dir;

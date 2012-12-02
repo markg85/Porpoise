@@ -4,6 +4,8 @@
 #include <QShortcut>
 #include <QKeySequence>
 #include <QDeclarativeItem>
+#include <QEvent>
+#include <QKeyEvent>
 #include <QDebug>
 
 class Shortcut : public QDeclarativeItem
@@ -12,12 +14,11 @@ class Shortcut : public QDeclarativeItem
     Q_PROPERTY(int key READ key WRITE setKey)
 public:
     explicit Shortcut(QDeclarativeItem *parent = 0);
-    void setKey(int key) {
-        m_shortcut->setKey(QKeySequence(key));
 
-        qDebug() << "(C++) Key set:" << m_shortcut->key();
-    }
-    int key() { return m_shortcut->key(); }
+    void setKey(int key);
+    int key() { return m_keySequence; }
+
+    bool eventFilter(QObject *obj, QEvent *e);
     
 signals:
     void activated();
@@ -25,8 +26,7 @@ signals:
 public slots:
 
 private:
-    QShortcut* m_shortcut;
-    
+    QKeySequence m_keySequence;
 };
 
 #endif // SHORTCUT_H

@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QMutex>
 #include <QWidget>
 #include "pathmodel.h"
 
@@ -15,17 +14,9 @@ class Util : public QObject
 public:
     static Util* instance()
     {
-        static QMutex mutex;
         if (!m_Instance)
         {
-            mutex.lock();
-
-            if (!m_Instance)
-            {
-                m_Instance = new Util;
-            }
-
-            mutex.unlock();
+            m_Instance = new Util;
         }
 
         return m_Instance;
@@ -33,18 +24,13 @@ public:
 
     static void drop()
     {
-        static QMutex mutex;
-        mutex.lock();
         delete m_Instance;
         m_Instance = 0;
-        mutex.unlock();
     }
 
     PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE QString testString() { return m_test; }
     Q_INVOKABLE QString testSearchString();
-    QWidget* mainWindow() { return m_mainWindow; }
-    void setMainWindow(QWidget* mainWindow) { m_mainWindow = mainWindow; }
 
 
 
