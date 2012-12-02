@@ -1,7 +1,6 @@
 #include "shortcut.h"
-
+#include <QKeyEvent>
 #include <QApplication>
-#include "util.h"
 
 Shortcut::Shortcut(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
@@ -25,7 +24,6 @@ void Shortcut::setKey(int key)
     m_keySequence = QKeySequence(key);
 
     qDebug() << "(C++) Key set:" << m_keySequence;
-
 }
 
 bool Shortcut::eventFilter(QObject *obj, QEvent *e)

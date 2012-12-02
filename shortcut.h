@@ -1,11 +1,7 @@
 #ifndef SHORTCUT_H
 #define SHORTCUT_H
 
-#include <QShortcut>
-#include <QKeySequence>
 #include <QDeclarativeItem>
-#include <QEvent>
-#include <QKeyEvent>
 #include <QDebug>
 
 class Shortcut : public QDeclarativeItem
