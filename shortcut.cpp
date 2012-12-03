@@ -1,6 +1,7 @@
 #include "shortcut.h"
 #include <QKeyEvent>
 #include <QApplication>
+#include <QDebug>
 
 Shortcut::Shortcut(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
@@ -9,30 +10,31 @@ Shortcut::Shortcut(QDeclarativeItem *parent)
     qApp->installEventFilter(this);
 }
 
-void Shortcut::setKey(int key)
+void Shortcut::setKey(QVariant key)
 {
-//    if(key.canConvert<QString>()) {
-//        m_keySequence = key.value<QString>();
-//    } else if(key.canConvert<int>()) {
-//        m_keySequence = key.value<int>();
-//    } else if(key.canConvert<QKeySequence>()) {
-//        m_keySequence = key.value<QKeySequence>();
-//    } else {
-//        m_keySequence = QKeySequence();
-//    }
-
-    m_keySequence = QKeySequence(key);
-
-    qDebug() << "(C++) Key set:" << m_keySequence;
+    if(key.canConvert<QKeySequence>()) {
+        m_keySequence = key.value<QKeySequence>();
+    } else {
+        m_keySequence = QKeySequence();
+    }
 }
 
 bool Shortcut::eventFilter(QObject *obj, QEvent *e)
 {
-    if(!m_keySequence.isEmpty() && e->type() == QEvent::KeyPress) {
+    if(!m_keySequence.isEmpty()) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
-        if(keyEvent->key() == m_keySequence) {
+
+        // Just mod keys is not enough for a shortcut, block them just by returning.
+        if (keyEvent->key() >= Qt::Key_Shift && keyEvent->key() <= Qt::Key_Alt) {
+            return QObject::eventFilter(obj, e);
+        }
+
+        int keyInt = keyEvent->modifiers() + keyEvent->key();
+
+        if(e->type() == QEvent::KeyPress && QKeySequence(keyInt).matches(m_keySequence)) {
             emit activated();
         }
     }
+
     return QObject::eventFilter(obj, e);
 }
