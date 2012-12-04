@@ -7,10 +7,35 @@ import Porpoise 0.1
  */
 
 Item {
+    // refresh
     Shortcut {
-        key: Qt.Key_F5
+        key: "F5"
         onActivated: {
             splitView.activeViewContainer.reload()
+        }
+    }
+
+    // copy
+    Shortcut {
+        key: "Ctrl+C"
+        onActivated: {
+            console.log("JS: " + key + " pressed.")
+        }
+    }
+
+    // cut
+    Shortcut {
+        key: "Ctrl+X"
+        onActivated: {
+            console.log("JS: " + key + " pressed.")
+        }
+    }
+
+    // paste
+    Shortcut {
+        key: "Ctrl+V"
+        onActivated: {
+            console.log("JS: " + key + " pressed.")
         }
     }
 }

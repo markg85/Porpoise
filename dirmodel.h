@@ -55,7 +55,6 @@ public:
     enum Roles {
         UrlRole = Qt::UserRole + 1,
         MimeTypeRole,
-        Thumbnail,
         IconName,
         BaseName,
         Extension,
@@ -81,13 +80,11 @@ public:
 
     Q_INVOKABLE int indexForUrl(const QString &url) const;
 
-    Q_INVOKABLE QVariantMap get(int index) const;
     Q_INVOKABLE QObject* itemForIndex(int index) const;
     Q_INVOKABLE void run(int index) const;
     Q_INVOKABLE void reload();
 
     void rebuildUrlToIndex();
-    void cancelCurrentlyRunningJobs();
 
 protected Q_SLOTS:
     void updatePreview(const KFileItem &item, const QPixmap &preview);
@@ -111,7 +108,6 @@ private:
     KImageCache* m_imageCache;
     int m_thumbWidth;
     int m_thumbHeight;
-    KIO::PreviewJob* m_currentJob;
 };
 
 #endif // DIRMODEL_H

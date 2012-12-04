@@ -34,18 +34,6 @@ DirModel::DirModel(QObject *parent)
     , m_thumbHeight(128)
 
 {
-    KMimeType::List mimeList = KMimeType::allMimeTypes();
-
-    m_mimeTypes << "inode/directory";
-    foreach (KMimeType::Ptr mime, mimeList) {
-        if (mime->name().startsWith(QLatin1String("image/"))) {
-            m_mimeTypes << mime->name();
-        }
-    }
-
-    //TODO: configurable mime filter
-    //dirLister()->setMimeFilter(m_mimeTypes);
-
     // Delayed mime detection
     dirLister()->setDelayedMimeTypes(true);
 
@@ -61,7 +49,6 @@ DirModel::DirModel(QObject *parent)
     roleNames[KDirModel::ColumnCount]   = "ColumnCount";
     roleNames[UrlRole]                  = "Url";
     roleNames[MimeTypeRole]             = "MimeType";
-    roleNames[Thumbnail]                = "Thumbnail";
     roleNames[IconName]                 = "IconName";
     roleNames[BaseName]                 = "BaseName";
     roleNames[Extension]                = "Extension";
@@ -136,22 +123,6 @@ int DirModel::indexForUrl(const QString &url) const
     return index.row();
 }
 
-QVariantMap DirModel::get(int i) const
-{
-    QModelIndex modelIndex = index(i, 0);
-
-    KFileItem item = KDirModel::itemForIndex(modelIndex);
-    QString url = item.url().prettyUrl();
-    QString mimeType = item.mimetype();
-
-    QVariantMap ret;
-    ret.insert("isDir", QVariant(item.isDir()));
-    ret.insert("url", QVariant(url));
-    ret.insert("mimeType", QVariant(mimeType));
-
-    return ret;
-}
-
 QObject* DirModel::itemForIndex(int i) const
 {
     QModelIndex modelIndex = index(i, 0);
@@ -186,10 +157,6 @@ void DirModel::rebuildUrlToIndex()
         KFileItem item = KDirModel::itemForIndex(modelIndex);
         m_urlToIndex.insert(item.url(), modelIndex);
     }
-}
-
-void DirModel::cancelCurrentlyRunningJobs()
-{
 }
 
 QVariant DirModel::data(const QModelIndex &index, int role) const

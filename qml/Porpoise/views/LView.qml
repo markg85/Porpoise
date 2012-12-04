@@ -96,7 +96,7 @@ Item {
                     list.mouseEvent()
                     var currentFileItem = dirModel.itemForIndex(index)
                     if(currentFileItem.isDir) {
-                        urlWrapper.url = dirModel.get(index).url
+                        urlWrapper.url = currentFileItem.url
                     } else {
                         currentFileItem.run()
                     }
