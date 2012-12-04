@@ -29,6 +29,7 @@
 
 DirModel::DirModel(QObject *parent)
     : KDirModel(parent)
+    , m_previewJobs()
     , m_thumbWidth(128)
     , m_thumbHeight(128)
 
@@ -122,6 +123,7 @@ void DirModel::setUrl(const QString& url)
         return;
     }
 
+    emit killCurrentJobs();
     beginResetModel();
     dirLister()->openUrl(url);
     endResetModel();
@@ -167,6 +169,7 @@ void DirModel::run(int i) const
 
 void DirModel::reload()
 {
+    emit killCurrentJobs();
     beginResetModel();
     dirLister()->openUrl(dirLister()->url(), KDirLister::Reload);
     endResetModel();
@@ -183,6 +186,10 @@ void DirModel::rebuildUrlToIndex()
         KFileItem item = KDirModel::itemForIndex(modelIndex);
         m_urlToIndex.insert(item.url(), modelIndex);
     }
+}
+
+void DirModel::cancelCurrentlyRunningJobs()
+{
 }
 
 QVariant DirModel::data(const QModelIndex &index, int role) const
@@ -263,15 +270,28 @@ void DirModel::previewFailed(const KFileItem &)
 
 void DirModel::newItems(const KFileItemList &list)
 {
+    KFileItemList listToUpdate;
+    foreach(const KFileItem& item, list) {
+        if(!m_imageCache->contains(item.url().prettyUrl())) {
+            listToUpdate << item;
+        }
+    }
+
+    // We need to know which index has which file so this "cache" is created to maintains small simple index.
+    // The index is used to update the preview once it comes in from the PreviewJob.
     rebuildUrlToIndex();
-    KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(thumbWidth(), thumbHeight()));
 
-    job->setIgnoreMaximumSize(true);
+    if(listToUpdate.count() > 0) {
+        KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(thumbWidth(), thumbHeight()));
 
-    qDebug() << "Created job" << job;
-    QObject::connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), this, SLOT(updatePreview(KFileItem,QPixmap)));
-    QObject::connect(job, SIGNAL(failed(KFileItem)), this, SLOT(previewFailed(KFileItem)));
-    QObject::connect(job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)));
+        job->setIgnoreMaximumSize(true);
+
+        qDebug() << "Created job" << job;
+        QObject::connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), this, SLOT(updatePreview(KFileItem,QPixmap)));
+        QObject::connect(job, SIGNAL(failed(KFileItem)), this, SLOT(previewFailed(KFileItem)));
+        QObject::connect(job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)));
+        QObject::connect(this, SIGNAL(killCurrentJobs()), job, SLOT(kill()));
+    }
 }
 
 void DirModel::result(KJob *)

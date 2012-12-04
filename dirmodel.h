@@ -87,6 +87,7 @@ public:
     Q_INVOKABLE void reload();
 
     void rebuildUrlToIndex();
+    void cancelCurrentlyRunningJobs();
 
 protected Q_SLOTS:
     void updatePreview(const KFileItem &item, const QPixmap &preview);
@@ -99,17 +100,18 @@ Q_SIGNALS:
     void urlChanged();
     void thumbWidthChanged();
     void thumbHeightChanged();
+    void killCurrentJobs();
 
 private:
     QStringList m_mimeTypes;
 
     //previews
-    QTimer *m_previewTimer;
-    QHash<KUrl, QPersistentModelIndex> m_filesToPreview;
     QHash<KUrl, QPersistentModelIndex> m_urlToIndex;
+    QHash<QString, KIO::PreviewJob*> m_previewJobs;
     KImageCache* m_imageCache;
     int m_thumbWidth;
     int m_thumbHeight;
+    KIO::PreviewJob* m_currentJob;
 };
 
 #endif // DIRMODEL_H
