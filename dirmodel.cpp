@@ -230,11 +230,6 @@ void DirModel::updatePreview(const KFileItem &item, const QPixmap &preview)
     setData(index, preview, Qt::DecorationRole);
 }
 
-void DirModel::previewFailed(const KFileItem &)
-{
-}
-
-
 void DirModel::newItems(const KFileItemList &list)
 {
     KFileItemList listToUpdate;
@@ -253,15 +248,7 @@ void DirModel::newItems(const KFileItemList &list)
 
         job->setIgnoreMaximumSize(true);
 
-        qDebug() << "Created job" << job;
         QObject::connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), this, SLOT(updatePreview(KFileItem,QPixmap)));
-        QObject::connect(job, SIGNAL(failed(KFileItem)), this, SLOT(previewFailed(KFileItem)));
-        QObject::connect(job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)));
         QObject::connect(this, SIGNAL(killCurrentJobs()), job, SLOT(kill()));
     }
-}
-
-void DirModel::result(KJob *)
-{
-    qDebug() << "Result....";
 }

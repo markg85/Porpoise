@@ -88,11 +88,9 @@ public:
 
 protected Q_SLOTS:
     void updatePreview(const KFileItem &item, const QPixmap &preview);
-    void previewFailed(const KFileItem &item);
     void newItems(const KFileItemList& list);
-    void result(KJob*);
 
-Q_SIGNALS:
+signals:
     void countChanged();
     void urlChanged();
     void thumbWidthChanged();
