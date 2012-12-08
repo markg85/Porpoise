@@ -1,27 +1,28 @@
 #include "shortcut.h"
 #include <QKeyEvent>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDebug>
 
-Shortcut::Shortcut(QDeclarativeItem *parent)
-    : QDeclarativeItem(parent)
+Shortcut::Shortcut(QObject *parent)
+    : QObject(parent)
     , m_keySequence()
+    , m_keypressAlreadySend(false)
 {
     qApp->installEventFilter(this);
 }
 
 void Shortcut::setKey(QVariant key)
 {
-    if(key.canConvert<QKeySequence>()) {
+    QKeySequence newKey = key.value<QKeySequence>();
+    if(m_keySequence != newKey) {
         m_keySequence = key.value<QKeySequence>();
-    } else {
-        m_keySequence = QKeySequence();
+        emit keyChanged();
     }
 }
 
 bool Shortcut::eventFilter(QObject *obj, QEvent *e)
 {
-    if(!m_keySequence.isEmpty()) {
+    if(e->type() == QEvent::KeyPress && !m_keySequence.isEmpty()) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
 
         // Just mod keys is not enough for a shortcut, block them just by returning.
@@ -31,10 +32,13 @@ bool Shortcut::eventFilter(QObject *obj, QEvent *e)
 
         int keyInt = keyEvent->modifiers() + keyEvent->key();
 
-        if(e->type() == QEvent::KeyPress && QKeySequence(keyInt).matches(m_keySequence)) {
+        if(!m_keypressAlreadySend && QKeySequence(keyInt) == m_keySequence) {
+            m_keypressAlreadySend = true;
             emit activated();
         }
     }
-
+    else if(e->type() == QEvent::KeyRelease) {
+        m_keypressAlreadySend = false;
+    }
     return QObject::eventFilter(obj, e);
 }
