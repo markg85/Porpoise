@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QDeclarativeContext>
+#include <QClipboard>
 #include "qmlapplicationviewer.h"
 
 #include "pathmodel.h"
@@ -9,10 +10,9 @@
 #include "kgraphicsitem.h"
 #include "kurlundoredo.h"
 #include "shortcut.h"
+#include "clipboard.h"
 #include "util.h"
 #include "testclass.h"
-
-#include <QShortcut>
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -27,11 +27,18 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<KGraphicsItem>("Porpoise", 0, 1, "KGraphicsItem");
     qmlRegisterType<KUrlUndoRedo>("Porpoise", 0, 1, "KUrlUndoRedo");
     qmlRegisterType<Shortcut>("Porpoise", 0, 1, "Shortcut");
+    qmlRegisterType<Clipboard>("Porpoise", 0, 1, "Clipboard");
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();
 
+
+
 //    TestClass test;
+
+//    QClipboard* clip = QApplication::clipboard();
+
+//    QObject::connect(clip, SIGNAL(dataChanged()), &test, SLOT(dumpTestString()));
 
 //    QShortcut* reload = new QShortcut(QKeySequence(Qt::Key_F5), &viewer);
 //    QObject::connect(reload, SIGNAL(activated()), &test, SLOT(dumpTestString()));

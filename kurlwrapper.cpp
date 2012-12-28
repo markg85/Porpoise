@@ -33,7 +33,6 @@ void KUrlWrapper::setUrl(const QString &url)
     }
 
     qDebug() << "(C++) URL:" << m_url;
-
 }
 
 void KUrlWrapper::append(QString entry)

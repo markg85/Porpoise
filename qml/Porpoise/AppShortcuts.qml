@@ -2,11 +2,13 @@ import QtQuick 1.1
 import Porpoise 0.1
 
 /**
-  This file defines the application wide shortcuts and acts on them.
-  This file should only be used ONCE!
+  This file defines components that should only be added once.
  */
 
 Item {
+    // Clipboard
+    Clipboard { id: clip }
+
     // refresh
     Shortcut {
         key: "F5"
@@ -18,8 +20,12 @@ Item {
     // copy
     Shortcut {
         key: "Ctrl+C"
+        id: test
         onActivated: {
             console.log("JS: " + key + " pressed.")
+            console.log("JS: StandardKey: " + StandardKey.Save)
+            console.log("JS: StandardKey: " + Shortcut.Save)
+            console.log("JS: StandardKey: " + test.Save)
         }
     }
 
@@ -36,6 +42,7 @@ Item {
         key: "Ctrl+V"
         onActivated: {
             console.log("JS: " + key + " pressed.")
+            clip.paste(urlWrapper.url)
         }
     }
 }
