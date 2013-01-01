@@ -12,7 +12,6 @@
 #include "shortcut.h"
 #include "clipboard.h"
 #include "util.h"
-#include "testclass.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -31,28 +30,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     viewer.setMainQmlFile(QLatin1String("qml/Porpoise/main.qml"));
     viewer.showExpanded();
-
-
-
-//    TestClass test;
-
-//    QClipboard* clip = QApplication::clipboard();
-
-//    QObject::connect(clip, SIGNAL(dataChanged()), &test, SLOT(dumpTestString()));
-
-//    QShortcut* reload = new QShortcut(QKeySequence(Qt::Key_F5), &viewer);
-//    QObject::connect(reload, SIGNAL(activated()), &test, SLOT(dumpTestString()));
-
-
-//    test.folderThumbnails("/home/mark/Images/");
-//    test.fetchFolder("/home/mark/massive_files/");
-//    test.fetchFolder("/home/mark/lesser_massive");
-//    test.fetchFolder("ftp://ftp.mirror.aarnet.edu.au/pub/archlinux/extra/os/x86_64/");
-
-//    qDebug() << "-- START";
-//    DirModel dir;
-//    dir.setUrl("/home/mark/massive_files/");
-//    qDebug() << "-- END";
 
     return app->exec();
 }

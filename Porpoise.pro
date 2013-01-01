@@ -35,7 +35,6 @@ SOURCES += main.cpp \
     pathmodel.cpp \
     util.cpp \
     kcompletionwrapper.cpp \
-    testclass.cpp \
     dirmodel.cpp \
     kgraphicsitem.cpp \
     kurlundoredo.cpp \
@@ -54,7 +53,6 @@ HEADERS += \
     pathmodel.h \
     util.h \
     kcompletionwrapper.h \
-    testclass.h \
     dirmodel.h \
     fileitem.h \
     kgraphicsitem.h \
