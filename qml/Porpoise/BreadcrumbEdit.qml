@@ -1,18 +1,18 @@
 import QtQuick 1.1
 import Porpoise 0.1
-import org.kde.plasma.components 0.1 as PlasmaComponents
-import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 Item {
     id: bcEditRoot
 
-    PlasmaComponents.TextField {
+    TextInput {
         id: bcEdit
-        anchors.fill: parent
+        anchors.verticalCenter: parent.verticalCenter
+        x: 5
+        width: parent.width - x
+
         property string currentValue: ""
         property string lastValue: ""
         property bool fromLeftArrow: false
-        clearButtonShown: true
         focus: true
         text: {
             if(bcBar.urlWrapper.protocol === "file") {
@@ -42,6 +42,7 @@ Item {
             setCompleterPosition()
             console.log(currentValue)
         }
+
         Keys.onDownPressed: {
             var searchString = text.substring(text.lastIndexOf("/") + 1)
             currentValue = completionWrapper.nextMatch()
@@ -49,6 +50,7 @@ Item {
             setCompleterPosition()
             console.log(currentValue)
         }
+
         Keys.onTabPressed: {
 
             console.log("Keys.onTabPressed: " + currentValue)
@@ -59,7 +61,6 @@ Item {
                 completerText.text = ""
                 currentValue = ""
             }
-
         }
 
         Keys.onRightPressed: {
@@ -114,7 +115,7 @@ Item {
         function setCompleterPosition() {
             console.log("(JS) setCompleterPosition")
             var rect = positionToRectangle(cursorPosition);
-            completerText.x = rect.x + 6
+            completerText.x = rect.x
             console.log("(JS) -> currentValue: " + currentValue)
         }
 
@@ -145,17 +146,15 @@ Item {
         }
     }
 
-    PlasmaExtras.ScrollArea {
+    ListView {
         anchors.top: bcEdit.bottom
         width: parent.width
         height: 100
-        ListView {
-            anchors.fill: parent
-            model: completionWrapper.results
+        clip: true;
+        model: completionWrapper.results
 
-            delegate: Text {
-                text: modelData
-            }
+        delegate: Text {
+            text: modelData
         }
     }
 }

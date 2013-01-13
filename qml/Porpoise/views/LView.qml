@@ -202,10 +202,11 @@ Item {
                 parent.parent.parent.parent.activeView = true
             }
 
-            onContentYChanged: {
-                // toooo much parent....
-                parent.parent.parent.parent.activeView = true
-            }
+//            onContentYChanged: {
+//                // toooo much parent....
+//                // This causes a lot of needless signals..
+//                parent.parent.parent.parent.activeView = true
+//            }
 
             delegate: listDelegate
         }

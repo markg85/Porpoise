@@ -2,6 +2,10 @@ import QtQuick 1.1
 
 Item {
 
+    Component.onCompleted: {
+        console.log("... Crumbs created.")
+    }
+
     // This timer fires to update the url path model _after_ the animations have been run.
     Timer {
         property int index: 0
@@ -53,7 +57,6 @@ Item {
         orientation: ListView.Horizontal
         model: urlWrapper.pathModel
         delegate: BreadcrumbButton { lastItem: (index === (urlWrapper.rowCount() - 1)) ? true : false }
-        cacheBuffer: 100
 
         onContentWidthChanged: {
             if(contentItem.width > width) {

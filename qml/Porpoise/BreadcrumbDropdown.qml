@@ -89,15 +89,14 @@ Item {
         width: 200
         height: 0
         color: "red"
+        clip: true
 
-        PlasmaExtras.ScrollArea {
+        ListView {
             anchors.fill: parent
-            ListView {
-                model: completionForDirList.results
+            model: completionForDirList.results
 
-                delegate: Text {
-                    text: modelData
-                }
+            delegate: Text {
+                text: modelData
             }
         }
 
@@ -132,11 +131,10 @@ Item {
         ]
     }
 
-    Component.onCompleted: {
-        completionForDirList.setUrl(urlWrapper.urlTillIndex(index))
-    }
-
     KCompletionWrapper {
         id: completionForDirList
+        Component.onCompleted: {
+            setUrl(urlWrapper.urlTillIndex(index))
+        }
     }
 }
