@@ -4,7 +4,7 @@ folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
 # Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH = /usr/lib/kde4/imports
+# QML_IMPORT_PATH = /usr/lib/kde4/imports
 
 symbian:TARGET.UID3 = 0xE6C1FAF8
 
@@ -39,11 +39,17 @@ SOURCES += main.cpp \
     kgraphicsitem.cpp \
     kurlundoredo.cpp \
     shortcut.cpp \
-    clipboard.cpp
+    clipboard.cpp \
+    CNaturalString.inl \
+    CNaturalString.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
+
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LIBS += -lkdecore -lkio -lkdeui
 INCLUDEPATH += /usr/include/KDE
@@ -58,7 +64,10 @@ HEADERS += \
     kgraphicsitem.h \
     kurlundoredo.h \
     shortcut.h \
-    clipboard.h
+    clipboard.h \
+    CNaturalString.h \
+    mimeimageprovider.h \
+    thumbimageprovider.h
 
 OTHER_FILES += \
     qml/Porpoise/colorstyles/porpoise.js

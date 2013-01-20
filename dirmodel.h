@@ -59,6 +59,7 @@ public:
         BaseName,
         Extension,
         TimeString,
+        MimeOrThumb,
         ColumnCount
     };
 
@@ -89,6 +90,7 @@ public:
 protected Q_SLOTS:
     void updatePreview(const KFileItem &item, const QPixmap &preview);
     void newItems(const KFileItemList& list);
+    void listenerCompleted();
 
 signals:
     void countChanged();

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QWidget>
+#include <KImageCache>
 #include "pathmodel.h"
 
 
@@ -31,7 +32,7 @@ public:
     PathModel* pathModel() { return m_pathModel; }
     Q_INVOKABLE QString testString() { return m_test; }
     Q_INVOKABLE QString testSearchString();
-
+    KImageCache* imageCache() { return m_imageCache; }
 
 
 signals:
@@ -51,6 +52,7 @@ private:
     QString m_test;
     PathModel* m_pathModel;
     QWidget* m_mainWindow;
+    KImageCache* m_imageCache;
     
 };
 

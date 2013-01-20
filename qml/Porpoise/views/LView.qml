@@ -128,11 +128,14 @@ Item {
                         color: JsUtil.Theme.ViewContainer.ItemStates.normal.imageBackground
                         border.color: JsUtil.Theme.ViewContainer.ItemStates.normal.imageBorderColor
                         border.width: 1
-                        KGraphicsItem {
+                        Image {
                             width: 28
                             height: 28
+                            sourceSize.width: width
+                            sourceSize.height: height
                             anchors.centerIn: parent
-                            icon: decoration
+                            source: MimeOrThumb
+                            asynchronous: true
                         }
                     }
                     /**

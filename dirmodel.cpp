@@ -18,6 +18,7 @@
 */
 
 #include "dirmodel.h"
+#include "util.h"
 
 #include <QFileInfo>
 #include <QVariant>
@@ -53,10 +54,11 @@ DirModel::DirModel(QObject *parent)
     roleNames[BaseName]                 = "BaseName";
     roleNames[Extension]                = "Extension";
     roleNames[TimeString]               = "TimeString";
+    roleNames[MimeOrThumb]              = "MimeOrThumb";
     setRoleNames(roleNames);
 
     //using the same cache of the engine, they index both by url
-    m_imageCache = new KImageCache("porpoise_thumbnail_cache_2", 10485760);
+    m_imageCache = Util::instance()->imageCache();
 
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SIGNAL(countChanged()));
@@ -65,6 +67,7 @@ DirModel::DirModel(QObject *parent)
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
     connect(dirLister(), SIGNAL(newItems(KFileItemList)), this, SLOT(newItems(KFileItemList)));
+    connect(dirLister(), SIGNAL(completed()), this, SLOT(listenerCompleted()));
 }
 
 DirModel::~DirModel()
@@ -198,17 +201,15 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
         }
         return QString();
     }
-    case Qt::DecorationRole: {
+    case MimeOrThumb: {
         KFileItem item = KDirModel::itemForIndex(index);
-
-        QPixmap preview;
-
-        if (m_imageCache->findPixmap(item.url().prettyUrl(), &preview)) {
-            return preview;
+        if(m_imageCache->contains(item.url().prettyUrl())) {
+            return item.url().prettyUrl().prepend("image://thumb/");
         } else {
-            return item.iconName();
+            // Somehow it needs to fill a list or queue or whatever that builds the thumbnails.
+            // TODO i guess..
+            return item.iconName().prepend("image://mime/");
         }
-
     }
     default: {
         // Use the role as "column", then KDirModel will work with it's data(...) function.
@@ -239,10 +240,6 @@ void DirModel::newItems(const KFileItemList &list)
         }
     }
 
-    // We need to know which index has which file so this "cache" is created to maintains small simple index.
-    // The index is used to update the preview once it comes in from the PreviewJob.
-    rebuildUrlToIndex();
-
     if(listToUpdate.count() > 0) {
         KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(thumbWidth(), thumbHeight()));
 
@@ -251,4 +248,13 @@ void DirModel::newItems(const KFileItemList &list)
         QObject::connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), this, SLOT(updatePreview(KFileItem,QPixmap)));
         QObject::connect(this, SIGNAL(killCurrentJobs()), job, SLOT(kill()));
     }
+}
+
+void DirModel::listenerCompleted()
+{
+    // We need a KUrl -> QPersistentModelIndex index which isn't there by default. Create it for relative fast lookup.
+    // The index is used to update the preview once it comes in from the PreviewJob.
+    rebuildUrlToIndex();
+
+    qDebug() << "DirModel::listenerCompleted Listener finished.......";
 }
