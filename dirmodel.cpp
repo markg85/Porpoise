@@ -28,11 +28,30 @@
 #include <KImageCache>
 
 
+class DirModelPrivate
+{
+public:
+    DirModelPrivate( DirModel* model )
+        : q(model)
+        , m_urlToIndex()
+    {
+    }
+    ~DirModelPrivate()
+    {
+    }
+
+    void rebuildUrlToIndex();
+
+    DirModel* q;
+    QHash<KUrl, QPersistentModelIndex> m_urlToIndex;
+};
+
+
+
 DirModel::DirModel(QObject *parent)
     : KDirModel(parent)
+    , d(new DirModelPrivate(this))
     , m_previewJobs()
-    , m_thumbWidth(128)
-    , m_thumbHeight(128)
 
 {
     // Delayed mime detection
@@ -84,24 +103,6 @@ QString DirModel::url() const
     return dirLister()->url().prettyUrl();
 }
 
-void DirModel::setThumbWidth(int thumbWidth)
-{
-    if(thumbWidth == m_thumbWidth) {
-        return;
-    }
-    m_thumbWidth = thumbWidth;
-    emit thumbWidthChanged();
-}
-
-void DirModel::setThumbHeight(int thumbHeight)
-{
-    if(thumbHeight == m_thumbHeight) {
-        return;
-    }
-    m_thumbHeight = thumbHeight;
-    emit thumbHeightChanged();
-}
-
 void DirModel::setUrl(const QString& url)
 {
     KUrl incUrl(url);
@@ -133,14 +134,6 @@ QObject* DirModel::itemForIndex(int i) const
     return fItem;
 }
 
-void DirModel::run(int i) const
-{
-    QModelIndex modelIndex = index(i, 0);
-
-    KFileItem item = KDirModel::itemForIndex(modelIndex);
-    item.run();
-}
-
 void DirModel::reload()
 {
     emit killCurrentJobs();
@@ -148,18 +141,6 @@ void DirModel::reload()
     dirLister()->openUrl(dirLister()->url(), KDirLister::Reload);
     endResetModel();
     emit urlChanged();
-}
-
-void DirModel::rebuildUrlToIndex()
-{
-    m_urlToIndex.clear();
-
-    const int rows = rowCount();
-    for(int i = 0; i < rows; ++i) {
-        QModelIndex modelIndex = index(i, KDirModel::Name);
-        KFileItem item = KDirModel::itemForIndex(modelIndex);
-        m_urlToIndex.insert(item.url(), modelIndex);
-    }
 }
 
 QVariant DirModel::data(const QModelIndex &index, int role) const
@@ -221,7 +202,7 @@ QVariant DirModel::data(const QModelIndex &index, int role) const
 
 void DirModel::updatePreview(const KFileItem &item, const QPixmap &preview)
 {
-    QPersistentModelIndex index = m_urlToIndex.value(item.url());
+    QPersistentModelIndex index = d->m_urlToIndex.value(item.url());
 
     if (!index.isValid()) {
         return;
@@ -241,7 +222,8 @@ void DirModel::newItems(const KFileItemList &list)
     }
 
     if(listToUpdate.count() > 0) {
-        KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(thumbWidth(), thumbHeight()));
+        // this size part should be resolved in another way.
+        KIO::PreviewJob* job = new KIO::PreviewJob(list, QSize(256, 256));
 
         job->setIgnoreMaximumSize(true);
 
@@ -254,7 +236,23 @@ void DirModel::listenerCompleted()
 {
     // We need a KUrl -> QPersistentModelIndex index which isn't there by default. Create it for relative fast lookup.
     // The index is used to update the preview once it comes in from the PreviewJob.
-    rebuildUrlToIndex();
+    d->rebuildUrlToIndex();
 
     qDebug() << "DirModel::listenerCompleted Listener finished.......";
+}
+
+
+void DirModelPrivate::rebuildUrlToIndex()
+{
+    m_urlToIndex.clear();
+
+    KDirModel* temp = q;
+
+    const int rows = q->rowCount();
+    for(int i = 0; i < rows; ++i) {
+        QModelIndex modelIndex = q->index(i, KDirModel::Name);
+
+        KFileItem item = temp->itemForIndex(modelIndex);
+        m_urlToIndex.insert(item.url(), modelIndex);
+    }
 }

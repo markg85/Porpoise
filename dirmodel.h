@@ -28,6 +28,7 @@
 class QTimer;
 
 class KImageCache;
+class DirModelPrivate;
 
 /**
  * This class provides a QML binding to KDirModel
@@ -43,8 +44,6 @@ class DirModel : public KDirModel
      * @property string The url we want to browse. it may be an absolute path or a correct url of any protocol KIO supports
      */
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
-    Q_PROPERTY(int thumbWidth READ thumbWidth WRITE setThumbWidth NOTIFY thumbWidthChanged)
-    Q_PROPERTY(int thumbHeight READ thumbHeight WRITE setThumbHeight NOTIFY thumbHeightChanged)
 
     /**
      * @property count Total number of rows
@@ -70,22 +69,13 @@ public:
     void setUrl(const QString& url);
     QString url() const;
 
-    void setThumbWidth(int thumbWidth);
-    int thumbWidth() { return m_thumbWidth; }
-
-    void setThumbHeight(int thumbHeight);
-    int thumbHeight() { return m_thumbHeight; }
-
     QVariant data(const QModelIndex &index, int role) const;
     int count() const {return rowCount();}
 
     Q_INVOKABLE int indexForUrl(const QString &url) const;
 
     Q_INVOKABLE QObject* itemForIndex(int index) const;
-    Q_INVOKABLE void run(int index) const;
     Q_INVOKABLE void reload();
-
-    void rebuildUrlToIndex();
 
 protected Q_SLOTS:
     void updatePreview(const KFileItem &item, const QPixmap &preview);
@@ -95,19 +85,19 @@ protected Q_SLOTS:
 signals:
     void countChanged();
     void urlChanged();
-    void thumbWidthChanged();
-    void thumbHeightChanged();
     void killCurrentJobs();
 
 private:
+
+    friend class DirModelPrivate;
+    DirModelPrivate *const d;
+
     QStringList m_mimeTypes;
 
     //previews
-    QHash<KUrl, QPersistentModelIndex> m_urlToIndex;
+
     QHash<QString, KIO::PreviewJob*> m_previewJobs;
     KImageCache* m_imageCache;
-    int m_thumbWidth;
-    int m_thumbHeight;
 };
 
 #endif // DIRMODEL_H

@@ -26,12 +26,6 @@ Item {
 
     DirModel {
         id: dirModel
-
-        // It's advised to set the tumbnail with and height to the max size that the thumbnail will ever be.
-        // Then scale it down further in KGraphicsItem by setting the width and height in there to a smaller or equal size as the ones you set here.
-        // Doing this will make the same thumbnail usable in multiple views with different sizes.
-        thumbWidth: 128
-        thumbHeight: 128
     }
 
     state: "list"
