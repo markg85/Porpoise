@@ -134,7 +134,9 @@ Item {
                             sourceSize.width: width
                             sourceSize.height: height
                             anchors.centerIn: parent
-                            source: MimeOrThumb
+                            // source: MimeOrThumb
+                            // Temporary hack
+                            source: "image://mime/inode-directory"
                             asynchronous: true
                         }
                     }
@@ -200,6 +202,10 @@ Item {
             cacheBuffer: 100
             spacing: 5
             boundsBehavior: Flickable.StopAtBounds
+
+            onCountChanged: {
+                console.log("--->> QML count changed: " + count)
+            }
 
             onMouseEvent: {
                 parent.parent.parent.parent.activeView = true

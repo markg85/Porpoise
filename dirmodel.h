@@ -20,30 +20,52 @@
 #ifndef DIRMODEL_H
 #define DIRMODEL_H
 
-#include <KDirModel>
-#include "fileitem.h"
+#include <QAbstractItemModel>
+#include <QThread>
 #include <QVariant>
-#include <KIO/PreviewJob>
 
-class QTimer;
 
-class KImageCache;
-class DirModelPrivate;
+
+#include "kdirlisterv2.h"
+#include "kdirectory.h"
+
+
+class DirModel;
 
 /**
- * This class provides a QML binding to KDirModel
- * Provides an easy way to navigate a filesystem from within QML
- *
- * @author Marco Martin <mart@kde.org>
+ * @brief The private class for DirModel. This class contains all logic.
  */
-class DirModel : public KDirModel
+class DirModelPrivate : public QObject
+{
+    Q_OBJECT
+
+public slots:
+    void itemsAdded(KDirectory* dir);
+    void folderCompleted(KDirectory* dir);
+    void slotClear();
+
+public:
+    DirModelPrivate(DirModel* model);
+
+    DirModel* q;
+    KDirListerV2* m_lister;
+    QString m_url;
+//    KDirectory* m_root;
+};
+
+/**
+ * This class is a rewritten KDirModel class. It's made in an attempt to make it faster and to get all stuff - as far as possible - out of the gui thread.
+ *
+ * @author Mark Gaiser <markg85@gmail.com>
+ */
+class DirModel : public QAbstractItemModel
 {
     Q_OBJECT
 
     /**
      * @property string The url we want to browse. it may be an absolute path or a correct url of any protocol KIO supports
      */
-    Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(QString url READ url WRITE openUrl NOTIFY urlChanged)
 
     /**
      * @property count Total number of rows
@@ -52,7 +74,14 @@ class DirModel : public KDirModel
 
 public:
     enum Roles {
-        UrlRole = Qt::UserRole + 1,
+        Name = 0,
+        Size,
+        ModifiedTime,
+        Permissions,
+        Owner,
+        Group,
+        Type,
+        UrlRole,
         MimeTypeRole,
         IconName,
         BaseName,
@@ -66,38 +95,39 @@ public:
     virtual ~DirModel();
     virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
 
-    void setUrl(const QString& url);
-    QString url() const;
+    void openUrl(const QString& url);
+    const QString& url();
 
     QVariant data(const QModelIndex &index, int role) const;
     int count() const {return rowCount();}
 
-    Q_INVOKABLE int indexForUrl(const QString &url) const;
+    /// Reimplemented from QAbstractItemModel. O(1)
+    virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
 
-    Q_INVOKABLE QObject* itemForIndex(int index) const;
+    /// Reimplemented from QAbstractItemModel.
+    virtual QModelIndex parent ( const QModelIndex & index ) const;
+
+    /// Reimplemented from QAbstractItemModel.
+    virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+
+    /// Reimplemented from QAbstractItemModel. Returns the column titles.
+    virtual QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
+    virtual bool hasChildren(const QModelIndex &parent) const;
+
+    virtual bool canFetchMore(const QModelIndex &parent) const;
+
+    virtual void fetchMore(const QModelIndex &parent);
+
     Q_INVOKABLE void reload();
-
-protected Q_SLOTS:
-    void updatePreview(const KFileItem &item, const QPixmap &preview);
-    void newItems(const KFileItemList& list);
-    void listenerCompleted();
 
 signals:
     void countChanged();
     void urlChanged();
-    void killCurrentJobs();
 
 private:
-
     friend class DirModelPrivate;
     DirModelPrivate *const d;
-
-    QStringList m_mimeTypes;
-
-    //previews
-
-    QHash<QString, KIO::PreviewJob*> m_previewJobs;
-    KImageCache* m_imageCache;
 };
 
 #endif // DIRMODEL_H

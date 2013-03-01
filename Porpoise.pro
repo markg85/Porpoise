@@ -40,8 +40,10 @@ SOURCES += main.cpp \
     kurlundoredo.cpp \
     shortcut.cpp \
     clipboard.cpp \
-    CNaturalString.inl \
-    CNaturalString.cpp
+    kdirectoryentry.cpp \
+    kdirectory.cpp \
+    kdirlisterv2_p.cpp \
+    kdirlisterv2.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -60,14 +62,16 @@ HEADERS += \
     util.h \
     kcompletionwrapper.h \
     dirmodel.h \
-    fileitem.h \
     kgraphicsitem.h \
     kurlundoredo.h \
     shortcut.h \
     clipboard.h \
-    CNaturalString.h \
     mimeimageprovider.h \
-    thumbimageprovider.h
+    thumbimageprovider.h \
+    kdirectoryentry.h \
+    kdirectory.h \
+    kdirlisterv2_p.h \
+    kdirlisterv2.h
 
 OTHER_FILES += \
     qml/Porpoise/colorstyles/porpoise.js
